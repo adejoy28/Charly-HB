@@ -3,11 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return response()->json([
-        'message' => 'Stock Meuve API is running',
-        'version' => '1.0.0',
-        'status' => 'active'
-    ]);
+    return view('landing');
 });
 
 Route::get('/welcome', function () {
