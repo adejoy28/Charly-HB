@@ -2,9 +2,13 @@
 deployment:
   tasks:
     - echo "DEPLOY WORKING"
-
+    - export REPOPATH=/home/vjxzcyjr/repositories/stock-meuve
+    - echo "REPOPATH: $REPOPATH"
     - export DEPLOYPATH=/home/vjxzcyjr/charlyhb
     - echo "DEPLOYPATH: $DEPLOYPATH"
+
+    - /bin/cp -R $REPOPATH/* $DEPLOYPATH
+
     - cd $DEPLOYPATH
 
     - echo "turning artisanDOWN"
