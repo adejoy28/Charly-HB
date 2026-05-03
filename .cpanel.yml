@@ -3,9 +3,22 @@ deployment:
     - export DEPLOYPATH=/home/vjxzcyjr/charlyhb
     - cd $DEPLOYPATH
 
-    - php artisan down || true
+    - echo "DEPLOY START" >> deploy.log
 
-    - php artisan config:clear
-    - php artisan cache:clear
+    - php artisan down || true
+    - echo "APP DOWN" >> deploy.log
+
+    - php artisan config:clear >> deploy.log 2>&1
+    - echo "CONFIG CLEARED" >> deploy.log
+
+    - php artisan cache:clear >> deploy.log 2>&1
+    - echo "CACHE CLEARED" >> deploy.log
+
+    - php artisan config:cache >> deploy.log 2>&1
+    - echo "CONFIG CACHED" >> deploy.log
+
+    - php artisan route:cache >> deploy.log 2>&1
+    - echo "ROUTES CACHED" >> deploy.log
 
     - php artisan up || true
+    - echo "DEPLOY DONE" >> deploy.log
