@@ -8,5 +8,5 @@ services:
     startCommand: npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: https://stock-meuve.onrender.com
+        value: https://charlyhbapi.adebayosystems.com.ng
     healthCheckPath: /
