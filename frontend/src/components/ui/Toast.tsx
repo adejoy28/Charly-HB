@@ -61,7 +61,7 @@ function ToastContainer({ toasts, removeToast }: { toasts: Toast[], removeToast:
         <div
           key={toast.id}
           className={`
-            max-w-sm w-full bg-white border rounded-lg shadow-lg p-4 
+            max-w-sm w-full bg-white border rounded-xl shadow-lg p-4
             transform transition-all duration-300 ease-in-out
             ${toast.type === 'success' ? 'border-green-200 bg-green-50' : ''}
             ${toast.type === 'error' ? 'border-red-200 bg-red-50' : ''}

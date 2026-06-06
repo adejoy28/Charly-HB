@@ -54,13 +54,13 @@ export default class ErrorBoundary extends Component<Props, State> {
             <div className="space-y-3">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full bg-orange-500 text-white rounded-lg h-12 font-medium active:opacity-70"
+                className="w-full bg-orange-500 text-white rounded-xl h-12 font-semibold active:opacity-70"
               >
                 Refresh Page
               </button>
               <button
                 onClick={() => this.setState({ hasError: false })}
-                className="w-full bg-gray-200 text-gray-700 rounded-lg h-12 font-medium active:opacity-70"
+                className="w-full bg-gray-200 text-gray-700 rounded-xl h-12 font-semibold active:opacity-70"
               >
                 Try Again
               </button>

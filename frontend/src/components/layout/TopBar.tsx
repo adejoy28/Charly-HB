@@ -24,11 +24,11 @@ export default function TopBar({ title, period, onPeriodChange }: TopBarProps) {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
       {/* App name bar */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-1">
+      <div className="flex items-center justify-between px-4 lg:px-8 pt-3 pb-1">
         <div className="flex items-center gap-2">
-          {/* Logo mark — orange circle with S */}
+          {/* Logo mark — orange circle with CHB */}
           <div className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center shrink-0">
-            <span className="text-white text-xs font-bold"> CHB </span>
+            <span className="text-white text-[10px] font-bold tracking-tight">CHB</span>
           </div>
           <span className="text-base font-bold text-gray-900 tracking-tight">Charly HB</span>
         </div>
@@ -36,8 +36,8 @@ export default function TopBar({ title, period, onPeriodChange }: TopBarProps) {
       </div>
 
       {/* Page title + period toggle */}
-      <div className="flex items-center justify-between px-4 pb-2 pt-1">
-        <h1 className="text-sm font-medium text-gray-500">{title}</h1>
+      <div className="flex items-center justify-between px-4 lg:px-8 pb-2.5 pt-1">
+        <h1 className="text-sm lg:text-base font-semibold text-gray-900 truncate">{title}</h1>
 
         {/* Period toggle — scrollable on small screens */}
         <div className="flex gap-1 overflow-x-auto scrollbar-hide shrink-0 ml-2">

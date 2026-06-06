@@ -18,10 +18,10 @@
 /public/storage
 /storage/*.key
 /storage/pail
-/vendor
 Homestead.json
 Homestead.yaml
 Thumbs.db
+vendor/*
 CLAUDE.md
 StockFlow_AgentPlan_Updated.md
 StockFlow_AgentPlan.md
@@ -35,3 +35,8 @@ backup/stockmeuve_backup_sqlite.sql
 backup/stockmeuve_backup.sql
 frontend/scripts/generate-icons.mjs
 .github/workflows/frontend.yml
+app.zip
+docs/API.md
+docs/ARCHITECTURE.md
+docs/README.md
+docs/SETUP.md

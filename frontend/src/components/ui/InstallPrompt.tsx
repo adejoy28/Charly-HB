@@ -67,7 +67,7 @@ export default function InstallPrompt() {
         </button>
         <button
           onClick={handleInstall}
-          className="text-xs font-semibold text-white bg-orange-500 px-3 py-1.5 rounded-lg active:opacity-70"
+          className="text-xs font-semibold text-white bg-orange-500 px-3 py-1.5 rounded-xl active:opacity-70"
         >
           Install
         </button>

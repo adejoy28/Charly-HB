@@ -11,9 +11,10 @@ interface BaseModalProps {
   onClose: () => void
   title: string
   children: React.ReactNode
+  size?: 'default' | 'wide'
 }
 
-export default function BaseModal({ isOpen, onClose, title, children }: BaseModalProps) {
+export default function BaseModal({ isOpen, onClose, title, children, size = 'default' }: BaseModalProps) {
   // Generate a fresh idempotency key every time the modal opens
   useEffect(() => {
     if (isOpen) {
@@ -30,6 +31,8 @@ export default function BaseModal({ isOpen, onClose, title, children }: BaseModa
 
   if (!isOpen) return null
 
+  const sizeClass = size === 'wide' ? 'md:max-w-lg lg:max-w-2xl' : 'md:max-w-md lg:max-w-lg'
+
   return (
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
@@ -39,12 +42,12 @@ export default function BaseModal({ isOpen, onClose, title, children }: BaseModa
       />
 
       {/* Bottom sheet on mobile, centered dialog on desktop */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl md:max-w-md md:mx-auto md:rounded-2xl md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2">
+      <div className={`fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl md:mx-auto md:rounded-2xl md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2 ${sizeClass}`}>
         {/* Drag handle */}
         <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-4 md:hidden" />
 
         {/* Modal header */}
-        <div className="flex items-center justify-between px-4 pb-2">
+        <div className="flex items-center justify-between px-4 lg:px-6 pb-2 pt-1">
           <h3 className="text-base font-semibold text-gray-900">{title}</h3>
           <button
             onClick={onClose}
@@ -57,7 +60,7 @@ export default function BaseModal({ isOpen, onClose, title, children }: BaseModa
         </div>
 
         {/* Modal body */}
-        <div className="px-4 pb-6 max-h-[85vh] overflow-y-auto">
+        <div className="px-4 lg:px-6 pb-6 max-h-[85vh] overflow-y-auto">
           {children}
         </div>
       </div>

@@ -1,59 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Stock Meuve
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern Laravel-based inventory management system for multi-shop stock tracking and reporting.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Multi-shop Support**: Manage inventory across multiple locations
+- **Real-time Tracking**: Monitor stock movements in real-time
+- **Comprehensive API**: RESTful API with OpenAPI documentation
+- **Movement Types**: Opening stock, receipts, distributions, corrections, and spoilage tracking
+- **Advanced Reporting**: Detailed analytics and export capabilities
+- **Modern Architecture**: Clean, scalable codebase with Laravel 12
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📚 Documentation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Comprehensive documentation is available in the `/docs` directory:
 
-## Learning Laravel
+- **[API Documentation](./docs/API.md)** - Complete REST API reference
+- **[Setup Guide](./docs/SETUP.md)** - Installation and configuration
+- **[Architecture Documentation](./docs/ARCHITECTURE.md)** - System design and technical details
+- **[Documentation Index](./docs/README.md)** - Complete documentation overview
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🛠️ Technology Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Backend**: Laravel 12, PHP 8.2+
+- **Database**: MySQL/PostgreSQL
+- **Authentication**: Laravel Sanctum
+- **API Documentation**: Scramble (OpenAPI)
+- **Queue System**: Redis/Database
+- **Testing**: PHPUnit
 
-## Laravel Sponsors
+## 🚀 Quick Start
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. **Clone and install**
+   ```bash
+   git clone <repository-url>
+   cd stock-meuve
+   composer install
+   ```
 
-### Premium Partners
+2. **Configure environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   php artisan migrate
+   php artisan db:seed
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+3. **Start development server**
+   ```bash
+   php artisan serve
+   ```
 
-## Contributing
+4. **Access API documentation**
+   ```
+   http://localhost:8000/docs
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📊 API Overview
 
-## Code of Conduct
+### Authentication
+- Token-based authentication using Laravel Sanctum
+- Rate limiting for security
+- User registration and management
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Core Resources
+- **Products**: Manage product catalog
+- **Shop**: Multi-location management
+- **Movements**: Track all stock movements
+- **Reports**: Analytics and insights
+- **Export**: Data export functionality
 
-## Security Vulnerabilities
+### Movement Types
+- Opening Stock (initial inventory)
+- Receipts (stock from suppliers)
+- Distributions (between shops)
+- Corrections (manual adjustments)
+- Spoilage (damaged/expired items)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🧪 Testing
 
-## License
+```bash
+# Run all tests
+php artisan test
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Run with coverage
+php artisan test --coverage
+```
+
+## 🚀 Deployment
+
+The application is configured for multiple deployment options:
+
+- **Vercel** (serverless)
+- **Render** (PaaS)
+- **Docker** (containerized)
+- **Traditional hosting** (Apache/Nginx)
+
+## 📖 Documentation
+
+For detailed information about the API, setup, and architecture, please refer to the [documentation directory](./docs).
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+Built with ❤️ using [Laravel](https://laravel.com)

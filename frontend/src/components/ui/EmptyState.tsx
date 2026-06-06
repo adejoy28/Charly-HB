@@ -33,7 +33,7 @@ export default function EmptyState({
       {action && (
         <button
           onClick={action.onClick}
-          className="bg-orange-500 text-white text-sm font-medium rounded-lg h-12 px-5 w-full active:opacity-70"
+          className="bg-orange-500 text-white text-sm font-semibold rounded-xl h-12 px-5 w-full active:opacity-70"
         >
           {action.label}
         </button>

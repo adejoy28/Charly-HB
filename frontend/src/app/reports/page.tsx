@@ -182,17 +182,17 @@ export default function ReportsPage() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide sticky left-0 bg-gray-50 z-10 min-w-[140px]">
+                    <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide sticky left-0 bg-gray-50 z-10 min-w-[140px]">
                       Shop
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                       Total Cartons
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                       Total Value
                     </th>
                     {products.map(p => (
-                      <th key={p.id} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">
+                      <th key={p.id} className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">
                         {p.name}
                       </th>
                     ))}
@@ -216,19 +216,19 @@ export default function ReportsPage() {
 
                     return (
                       <tr key={shop.id}>
-                        <td className="px-4 py-3 sticky left-0 bg-white z-10">
+                        <td className="px-4 lg:px-6 py-3 sticky left-0 bg-white z-10">
                           <span className="text-sm font-medium text-gray-900 whitespace-nowrap">{shop.name}</span>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 lg:px-6 py-3">
                           <span className="text-sm font-medium text-orange-500">{formatNumber(totalCartons)}</span>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 lg:px-6 py-3">
                           <span className="text-sm font-medium text-gray-700">
                             {totalValue > 0 ? formatCurrency(totalValue) : '—'}
                           </span>
                         </td>
                         {products.map(p => (
-                          <td key={p.id} className="px-4 py-3">
+                          <td key={p.id} className="px-4 lg:px-6 py-3">
                             <span className="text-sm text-gray-700">{formatNumber(productQty[p.id] || 0)}</span>
                           </td>
                         ))}
@@ -327,28 +327,28 @@ export default function ReportsPage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide sticky left-0 bg-gray-50 z-10 min-w-[140px]">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide sticky left-0 bg-gray-50 z-10 min-w-[140px]">
                     Product
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Received
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Distributed
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Spoiled
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Balance
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Revenue
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Cost
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Margin
                   </th>
                 </tr>
@@ -362,14 +362,14 @@ export default function ReportsPage() {
 
                   return (
                     <tr key={product.id}>
-                      <td className="px-4 py-3 sticky left-0 bg-white z-10">
+                      <td className="px-4 lg:px-6 py-3 sticky left-0 bg-white z-10">
                         <p className="text-sm font-medium text-gray-900 whitespace-nowrap">{product.name}</p>
                         <p className="text-xs text-gray-400">{product.sku_code}</p>
                       </td>
-                      <td className="px-4 py-3"><span className="text-sm text-green-600 font-medium">{formatNumber(received)}</span></td>
-                      <td className="px-4 py-3"><span className="text-sm text-orange-500 font-medium">{formatNumber(distributed)}</span></td>
-                      <td className="px-4 py-3"><span className="text-sm text-red-500 font-medium">{formatNumber(spoiled)}</span></td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 lg:px-6 py-3"><span className="text-sm text-green-600 font-medium">{formatNumber(received)}</span></td>
+                      <td className="px-4 lg:px-6 py-3"><span className="text-sm text-orange-500 font-medium">{formatNumber(distributed)}</span></td>
+                      <td className="px-4 lg:px-6 py-3"><span className="text-sm text-red-500 font-medium">{formatNumber(spoiled)}</span></td>
+                      <td className="px-4 lg:px-6 py-3">
                         <span className={`text-sm font-medium ${
                           product.balance === 0 ? 'text-red-500' :
                           product.balance <= 5 ? 'text-orange-500' : 'text-green-600'
@@ -377,17 +377,17 @@ export default function ReportsPage() {
                           {formatNumber(product.balance)}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 lg:px-6 py-3">
                         <span className="text-sm font-semibold text-orange-500">
                           {productData?.total_selling_value ? formatCurrency(productData.total_selling_value) : '—'}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 lg:px-6 py-3">
                         <span className="text-sm text-gray-500">
                           {productData?.total_cost_value ? formatCurrency(productData.total_cost_value) : '—'}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 lg:px-6 py-3">
                         <span className="text-sm font-semibold text-green-600">
                           {productData?.gross_margin ? formatCurrency(productData.gross_margin) : '—'}
                         </span>
@@ -453,19 +453,19 @@ export default function ReportsPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Product
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Damaged
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Expired
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Returned
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Total
               </th>
             </tr>
@@ -480,14 +480,14 @@ export default function ReportsPage() {
             )}
             {spoilsData.map(spoil => (
               <tr key={spoil.product?.id}>
-                <td className="px-4 py-3">
+                <td className="px-4 lg:px-6 py-3">
                   <p className="text-sm font-medium text-gray-900">{spoil.product?.name}</p>
                   <p className="text-xs text-gray-400">{spoil.product?.sku_code}</p>
                 </td>
-                <td className="px-4 py-3"><span className="text-sm font-medium text-orange-500">{formatNumber(spoil.damaged_qty || 0)}</span></td>
-                <td className="px-4 py-3"><span className="text-sm font-medium text-red-500">{formatNumber(spoil.expired_qty || 0)}</span></td>
-                <td className="px-4 py-3"><span className="text-sm font-medium text-gray-500">{formatNumber(spoil.returned_qty || 0)}</span></td>
-                <td className="px-4 py-3"><span className="text-sm font-bold text-red-600">{formatNumber(spoil.total || 0)}</span></td>
+                <td className="px-4 lg:px-6 py-3"><span className="text-sm font-medium text-orange-500">{formatNumber(spoil.damaged_qty || 0)}</span></td>
+                <td className="px-4 lg:px-6 py-3"><span className="text-sm font-medium text-red-500">{formatNumber(spoil.expired_qty || 0)}</span></td>
+                <td className="px-4 lg:px-6 py-3"><span className="text-sm font-medium text-gray-500">{formatNumber(spoil.returned_qty || 0)}</span></td>
+                <td className="px-4 lg:px-6 py-3"><span className="text-sm font-bold text-red-600">{formatNumber(spoil.total || 0)}</span></td>
               </tr>
             ))}
           </tbody>
@@ -511,9 +511,9 @@ export default function ReportsPage() {
     return (
       <div className="space-y-4">
         <div className="h-10 bg-gray-100 rounded-xl animate-pulse" />
-        <div className="grid grid-cols-2 gap-3">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 bg-gray-100 rounded-xl animate-pulse" />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-24 bg-gray-100 rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -525,7 +525,7 @@ export default function ReportsPage() {
   // ─── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:space-y-6">
 
       {/* Filter bar */}
       <div>
@@ -544,7 +544,7 @@ export default function ReportsPage() {
             )}
             <button
               onClick={() => setFilterOpen(!filterOpen)}
-              className={`flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg border active:opacity-70 ${
+              className={`flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl border active:opacity-70 ${
                 isCustomRange
                   ? 'border-orange-500 text-orange-500 bg-orange-50'
                   : 'border-gray-200 text-gray-600 bg-white'
@@ -560,7 +560,7 @@ export default function ReportsPage() {
 
         {/* Collapsible filter panel */}
         {filterOpen && (
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4">
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-4">
 
             {/* Quick period pills */}
             <div>
@@ -574,7 +574,7 @@ export default function ReportsPage() {
                       setCustomFrom('')
                       setCustomTo('')
                     }}
-                    className={`text-xs font-medium rounded-full px-3 py-1.5 active:opacity-70 ${
+                    className={`text-xs font-medium rounded-full px-3 py-1 active:opacity-70 ${
                       period === p && !isCustomRange
                         ? 'bg-orange-500 text-white'
                         : 'bg-white border border-gray-200 text-gray-600'
@@ -596,7 +596,7 @@ export default function ReportsPage() {
                     type="date"
                     value={customFrom}
                     onChange={(e) => setCustomFrom(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+                    className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
                   />
                 </div>
                 <div>
@@ -605,18 +605,20 @@ export default function ReportsPage() {
                     type="date"
                     value={customTo}
                     onChange={(e) => setCustomTo(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+                    className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
                   />
                 </div>
               </div>
             </div>
 
-            <button
-              onClick={() => setFilterOpen(false)}
-              className="w-full h-10 bg-orange-500 text-white text-sm font-medium rounded-lg active:opacity-70"
-            >
-              Apply
-            </button>
+            <div className="md:col-span-2">
+              <button
+                onClick={() => setFilterOpen(false)}
+                className="w-full h-12 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70"
+              >
+                Apply
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -632,7 +634,7 @@ export default function ReportsPage() {
                 className={`py-3 px-4 border-b-2 font-medium text-sm whitespace-nowrap active:opacity-70 ${
                   activeTab === tab.id
                     ? 'border-orange-500 text-orange-500'
-                    : 'border-transparent text-gray-500'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
                 {tab.label}

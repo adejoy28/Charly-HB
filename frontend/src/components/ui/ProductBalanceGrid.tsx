@@ -9,16 +9,16 @@ interface ProductBalanceGridProps {
 }
 
 export default function ProductBalanceGrid({ products, onProductClick }: ProductBalanceGridProps) {
-  const getBalanceColor = (balance: number) => {
-    if (balance === 0) return 'text-red-600 bg-red-50 border-red-200'
-    if (balance <= 5) return 'text-yellow-600 bg-yellow-50 border-yellow-200'
-    return 'text-green-600 bg-green-50 border-green-200'
-  }
-
   const getBalanceText = (balance: number) => {
     if (balance === 0) return 'Out of Stock'
     if (balance <= 5) return 'Low Stock'
     return 'In Stock'
+  }
+
+  const getBalancePillClass = (balance: number) => {
+    if (balance === 0) return 'bg-red-50 text-red-500'
+    if (balance <= 5) return 'bg-orange-50 text-orange-500'
+    return 'bg-green-50 text-green-600'
   }
 
   const formatNumber = (num: number) => {
@@ -31,15 +31,11 @@ export default function ProductBalanceGrid({ products, onProductClick }: Product
         <div
           key={product.id}
           onClick={() => onProductClick && onProductClick(product)}
-          className={`bg-white rounded-lg shadow-sm border-2 p-4 cursor-pointer transition-all hover:shadow-md ${
-            product.balance === 0 ? 'border-red-200' : 
-            product.balance <= 5 ? 'border-yellow-200' : 
-            'border-gray-200'
-          }`}
+          className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-orange-300 transition-colors"
         >
           <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="font-semibold text-gray-900 text-sm leading-tight">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">
                 {product.name}
               </h3>
               <p className="text-xs text-gray-500 mt-1">
@@ -47,14 +43,14 @@ export default function ProductBalanceGrid({ products, onProductClick }: Product
               </p>
               {product.cost_price > 0 && (
                 <p className="text-xs text-gray-400 mt-1">
-                  Cost: ${formatNumber(product.cost_price)}
+                  Cost: ₦{formatNumber(product.cost_price)}
                 </p>
               )}
             </div>
           </div>
-          
+
           <div className="mt-4">
-            <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getBalanceColor(product.balance)}`}>
+            <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getBalancePillClass(product.balance)}`}>
               {getBalanceText(product.balance)}
             </div>
             <div className="mt-2">
@@ -66,12 +62,14 @@ export default function ProductBalanceGrid({ products, onProductClick }: Product
           </div>
         </div>
       ))}
-      
+
       {products.length === 0 && (
-        <div className="col-span-full text-center py-12">
-          <div className="text-gray-400 text-4xl mb-4">📦</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No products yet</h3>
-          <p className="text-gray-500">Add your first product to get started</p>
+        <div className="col-span-full bg-white border border-gray-200 rounded-xl p-8 text-center">
+          <div className="w-12 h-12 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+            <span className="text-2xl text-gray-400">📦</span>
+          </div>
+          <h3 className="text-sm font-medium text-gray-900 mb-2">No products yet</h3>
+          <p className="text-sm text-gray-500">Add your first product to get started</p>
         </div>
       )}
     </div>

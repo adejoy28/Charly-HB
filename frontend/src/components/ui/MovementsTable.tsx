@@ -35,7 +35,7 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
   if (loading) {
     return (
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-4 py-4 border-b border-gray-200">
+        <div className="px-4 lg:px-6 py-4 border-b border-gray-200">
           <div className="animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-1/4"></div>
           </div>
@@ -43,7 +43,7 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
         <div className="p-4 space-y-2">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="animate-pulse">
-              <div className="h-12 bg-gray-100 rounded-lg"></div>
+              <div className="h-12 bg-gray-100 rounded-xl"></div>
             </div>
           ))}
         </div>
@@ -54,11 +54,13 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
   if (!movements || movements.length === 0) {
     return (
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-4 py-4 border-b border-gray-200">
+        <div className="px-4 lg:px-6 py-4 border-b border-gray-200">
           <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">Movements</h3>
         </div>
         <div className="p-8 text-center">
-          <div className="w-12 h-12 bg-gray-300 rounded-full mx-auto mb-3"></div>
+          <div className="w-12 h-12 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+            <span className="text-2xl text-gray-400">📋</span>
+          </div>
           <h3 className="text-sm font-medium text-gray-900 mb-2">No movements recorded yet</h3>
           <p className="text-sm text-gray-500">Start by recording opening stock or receiving goods</p>
         </div>
@@ -68,33 +70,33 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-      <div className="px-4 py-4 border-b border-gray-200">
+      <div className="px-4 lg:px-6 py-4 border-b border-gray-200">
         <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">Movements</h3>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Date
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Time
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Product
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Type
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Quantity
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Shop / Note
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Status
               </th>
             </tr>
@@ -102,17 +104,17 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
           <tbody className="bg-white divide-y divide-gray-100">
             {movements.map((movement) => (
               <tr key={movement.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 whitespace-nowrap">
+                <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   <div className="text-sm text-gray-700">
                     {formatDate(movement.recorded_at)}
                   </div>
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap">
+                <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   <div className="text-sm text-gray-700">
                     {formatTime(movement.recorded_at)}
                   </div>
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap">
+                <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   <div>
                     <div className="text-sm font-medium text-gray-900">
                       {movement.product?.name || 'Unknown'}
@@ -122,22 +124,22 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap">
+                <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   <TypeBadge type={movement.type} />
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap">
+                <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   <div className={`text-sm font-medium ${
                     movement.qty > 0 ? 'text-green-600' : 'text-red-500'
                   }`}>
                     {movement.qty > 0 ? '+' : ''}{formatNumber(movement.qty)}
                   </div>
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap">
+                <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   <div className="text-sm text-gray-700">
                     {movement.shop?.name || movement.note || '-'}
                   </div>
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap">
+                <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   {movement.status && (
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                       movement.status === 'pending' ? 'bg-yellow-50 text-yellow-700' :

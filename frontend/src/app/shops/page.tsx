@@ -109,22 +109,22 @@ export default function ShopsPage() {
     const movements = shopMovements[shop.id] || []
 
     return (
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <div className="p-6">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">{shop.name}</h3>
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="p-4 lg:p-5">
+          <div className="flex justify-between items-start mb-4 gap-3">
+            <div className="min-w-0">
+              <h3 className="text-base font-semibold text-gray-900 truncate">{shop.name}</h3>
               {shop.archived && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-1">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 mt-1">
                   Archived
                 </span>
               )}
             </div>
             {!shop.archived && (
-              <div className="flex space-x-2">
+              <div className="flex items-center gap-3 shrink-0">
                 <button
                   onClick={() => loadShopMovements(shop.id)}
-                  className="text-orange-500 active:opacity-70 text-sm"
+                  className="text-orange-500 active:opacity-70 text-sm font-medium"
                 >
                   {isExpanded ? 'Hide' : 'Show'} History
                 </button>
@@ -146,7 +146,7 @@ export default function ShopsPage() {
                 ) : (
                   <button
                     onClick={() => setConfirmArchive(shop.id)}
-                    className="text-red-500 text-sm active:opacity-70"
+                    className="text-red-500 text-sm font-medium active:opacity-70"
                   >
                     Archive
                   </button>
@@ -225,55 +225,57 @@ export default function ShopsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:space-y-6">
       {/* Page Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-3 flex-wrap">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Shops</h1>
-          <p className="text-gray-600 mt-2">Manage delivery destinations and view distribution history</p>
+          <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">Shops</h1>
+          <p className="text-sm text-gray-500 mt-1">Manage delivery destinations and view distribution history</p>
         </div>
         <button
           onClick={() => setShowAddForm(true)}
-          className="px-4 py-2 bg-orange-500 text-white rounded-lg active:opacity-70"
+          className="h-12 px-5 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70"
         >
           Add Shop
         </button>
       </div>
 
       {/* Show Archived Toggle */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <label className="flex items-center">
+      <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             checked={showArchived}
             onChange={(e) => setShowArchived(e.target.checked)}
-            className="mr-2"
+            className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
           />
-          <span className="text-sm text-gray-700">Show archived shops</span>
+          <span className="text-sm text-gray-600">Show archived shops</span>
         </label>
       </div>
 
       {/* Add Shop Form */}
       {showAddForm && (
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Add New Shop</h3>
+        <div className="bg-white border border-gray-200 rounded-xl p-4 lg:p-6">
+          <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">Add New Shop</h3>
           <form onSubmit={handleAddShop}>
             {createError && (
-              <p className="text-sm text-red-500 mb-3">{createError}</p>
+              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-500">
+                {createError}
+              </div>
             )}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 max-w-md">
               <input
                 type="text"
                 value={newShopName}
                 onChange={(e) => setNewShopName(e.target.value)}
-                className="w-full h-12 border border-gray-200 rounded-lg px-3 text-base focus:outline-none focus:border-orange-500"
+                className="w-full h-12 border border-gray-200 rounded-xl px-4 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500"
                 placeholder="Enter shop name..."
                 required
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-orange-500 text-white rounded-lg text-sm font-medium active:opacity-70 disabled:opacity-40"
+                className="w-full h-12 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70 disabled:opacity-40"
               >
                 {loading ? 'Adding...' : 'Add Shop'}
               </button>
@@ -284,7 +286,7 @@ export default function ShopsPage() {
                   setNewShopName('')
                   setCreateError(null)
                 }}
-                className="w-full h-12 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm active:opacity-70"
+                className="w-full h-12 bg-white border border-gray-200 text-gray-600 text-sm font-medium rounded-xl active:opacity-70"
               >
                 Cancel
               </button>
@@ -294,7 +296,7 @@ export default function ShopsPage() {
       )}
 
       {/* Shops Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredShops.map((shop) => (
           <ShopCard key={shop.id} shop={shop} />
         ))}
@@ -302,21 +304,21 @@ export default function ShopsPage() {
 
       {/* Empty State */}
       {filteredShops.length === 0 && (
-        <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
+        <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
           <div className="text-gray-400 text-4xl mb-4">🏪</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-sm font-medium text-gray-900 mb-2">
             {showArchived ? 'No shops found' : 'No shops yet'}
           </h3>
-          <p className="text-gray-500 mb-4">
-            {showArchived ? 
-              'No shops match your current filters' : 
+          <p className="text-sm text-gray-500 mb-4">
+            {showArchived ?
+              'No shops match your current filters' :
               'Add your first shop to get started with deliveries'
             }
           </p>
           {!showArchived && (
             <button
               onClick={() => setShowAddForm(true)}
-              className="px-4 py-2 bg-orange-500 text-white rounded-lg active:opacity-70"
+              className="h-12 px-5 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70"
             >
               Add Your First Shop
             </button>

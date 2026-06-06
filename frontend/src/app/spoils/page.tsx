@@ -101,15 +101,15 @@ export default function SpoilsPage() {
   }
 
   const SpoilRow = ({ spoil, showActions = false }: { spoil: Movement; showActions?: boolean }) => (
-    <div className="bg-white border border-gray-200 rounded-lg p-4">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center space-x-4 mb-2">
+    <div className="bg-white border border-gray-200 rounded-xl p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mb-3">
             <h4 className="font-medium text-gray-900 text-sm">
               {spoil.product?.name || 'Unknown Product'}
             </h4>
-            <span className="text-sm text-gray-400">
-              ({spoil.product?.sku_code || ''})
+            <span className="text-xs text-gray-400">
+              {spoil.product?.sku_code || ''}
             </span>
             <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
               spoil.status === 'pending' ? 'bg-yellow-50 text-yellow-700' :
@@ -120,50 +120,50 @@ export default function SpoilsPage() {
               {spoil.status}
             </span>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             <div>
-              <span className="text-gray-500">Quantity:</span>
-              <span className="ml-2 font-medium text-red-500">
-                {formatNumber(Math.abs(spoil.qty))} units
-              </span>
+              <p className="text-xs text-gray-400">Quantity</p>
+              <p className="font-medium text-red-500">{formatNumber(Math.abs(spoil.qty))} units</p>
             </div>
             <div>
-              <span className="text-gray-500">Reason:</span>
-              <span className="ml-2 font-medium text-gray-700">
-                {getReasonLabel(spoil.reason || '')}
-              </span>
+              <p className="text-xs text-gray-400">Reason</p>
+              <p className="font-medium text-gray-700">{getReasonLabel(spoil.reason || '')}</p>
             </div>
             <div>
-              <span className="text-gray-500">Date:</span>
-              <span className="ml-2 text-gray-700">
-                {formatDate(spoil.recorded_at)} at {formatTime(spoil.recorded_at)}
-              </span>
+              <p className="text-xs text-gray-400">Date</p>
+              <p className="text-gray-700">{formatDate(spoil.recorded_at)}</p>
+              <p className="text-xs text-gray-400">{formatTime(spoil.recorded_at)}</p>
             </div>
-            {spoil.note && (
+            {spoil.note ? (
               <div>
-                <span className="text-gray-500">Note:</span>
-                <span className="ml-2 text-gray-700">{spoil.note}</span>
+                <p className="text-xs text-gray-400">Note</p>
+                <p className="text-gray-700 truncate">{spoil.note}</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-xs text-gray-400">Note</p>
+                <p className="text-gray-400">—</p>
               </div>
             )}
           </div>
         </div>
 
         {showActions && spoil.status === 'pending' && (
-          <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-gray-100">
+          <div className="flex md:flex-col gap-2 shrink-0 md:w-40">
             <button
               onClick={() => handleConfirm(spoil.id)}
               disabled={actionLoading === spoil.id}
-              className="w-full h-12 bg-white text-red-500 text-sm font-medium rounded-lg border border-red-200 active:opacity-70 disabled:opacity-40"
+              className="flex-1 md:flex-none h-10 md:h-12 px-3 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70 disabled:opacity-40"
             >
-              {actionLoading === spoil.id ? 'Processing...' : 'Confirm Deduction'}
+              {actionLoading === spoil.id ? '...' : 'Confirm'}
             </button>
             <button
               onClick={() => handleReject(spoil.id)}
               disabled={actionLoading === spoil.id}
-              className="w-full h-12 bg-gray-100 text-gray-600 text-sm font-medium rounded-lg active:opacity-70 disabled:opacity-40"
+              className="flex-1 md:flex-none h-10 md:h-12 px-3 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl active:opacity-70 disabled:opacity-40"
             >
-              {actionLoading === spoil.id ? 'Processing...' : 'Reject'}
+              Reject
             </button>
           </div>
         )}
@@ -172,33 +172,34 @@ export default function SpoilsPage() {
   )
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-xl font-semibold text-gray-900">Spoils Queue</h1>
-        <p className="text-sm text-gray-700 mt-2">Review and action pending spoiled items</p>
+        <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">Spoils Queue</h1>
+        <p className="text-sm text-gray-500 mt-1">Review and action pending spoiled items</p>
       </div>
 
       {/* Pending Spoils Queue */}
       <div>
-        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">
+        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">
           Pending Spoils ({pendingSpoils.length})
         </h3>
-        
+
         {loading ? (
           <div className="space-y-2">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-gray-100 rounded-lg h-12 animate-pulse"></div>
+              <div key={i} className="bg-gray-100 rounded-xl h-16 animate-pulse"></div>
             ))}
           </div>
         ) : pendingSpoils.length === 0 ? (
-          <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-            <div className="w-12 h-12 bg-gray-300 rounded-full mx-auto mb-3"></div>
-            <h3 className="text-sm font-medium text-gray-900 mb-2">No pending spoils</h3>
-            <p className="text-sm text-gray-500">All spoils have been reviewed. You're all clear!</p>
-          </div>
+          <EmptyState
+            icon="✅"
+            title="No pending spoils"
+            description="All spoils have been reviewed. You're all clear!"
+            variant="success"
+          />
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {pendingSpoils.map((spoil) => (
               <SpoilRow key={spoil.id} spoil={spoil} showActions={true} />
             ))}
@@ -208,18 +209,18 @@ export default function SpoilsPage() {
 
       {/* History Section */}
       <div>
-        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">
+        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">
           History ({historySpoils.length})
         </h3>
-        
+
         {historySpoils.length === 0 ? (
-          <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-            <div className="w-12 h-12 bg-gray-300 rounded-full mx-auto mb-3"></div>
-            <h3 className="text-sm font-medium text-gray-900 mb-2">No history yet</h3>
-            <p className="text-sm text-gray-500">Confirmed and rejected spoils will appear here</p>
-          </div>
+          <EmptyState
+            icon="📋"
+            title="No history yet"
+            description="Confirmed and rejected spoils will appear here"
+          />
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {historySpoils.map((spoil) => (
               <SpoilRow key={spoil.id} spoil={spoil} showActions={false} />
             ))}

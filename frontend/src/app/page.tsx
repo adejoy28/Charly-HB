@@ -23,13 +23,13 @@ export default function Home() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:space-y-6">
       <div className="bg-white border border-gray-200 rounded-xl p-4">
-        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">Dashboard Overview</h3>
+        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Dashboard Overview</h3>
         <p className="text-sm text-gray-700">Your stock, in motion.</p>
-        <p className="text-xs text-gray-400 mt-2">Current period: {period}</p>
+        <p className="text-xs text-gray-400 mt-1">Current period: {period}</p>
         {pendingSpoilsCount > 0 && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
             <p className="text-red-500 text-sm">
               {pendingSpoilsCount} pending spoil{pendingSpoilsCount > 1 ? 's' : ''} awaiting review
             </p>
@@ -37,7 +37,7 @@ export default function Home() {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="bg-white border border-gray-200 rounded-xl p-4">
           <div className="text-2xl font-bold text-gray-900">
             {reportSummary?.total_opening || 0}
@@ -66,7 +66,7 @@ export default function Home() {
 
       <div className="bg-white border border-gray-200 rounded-xl p-4">
         <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <button
             onClick={() => handleQuickAction('opening')}
             className="p-4 bg-gray-50 rounded-xl active:opacity-70 text-left"
@@ -99,27 +99,25 @@ export default function Home() {
       </div>
 
       {products.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-          <div className="w-12 h-12 bg-gray-300 rounded-full mx-auto mb-3"></div>
-          <h3 className="text-sm font-medium text-gray-900 mb-2">No products yet</h3>
-          <p className="text-sm text-gray-500 mb-4">Add your first product to get started with stock management</p>
-          <button
-            onClick={() => handleQuickAction('opening')}
-            className="bg-orange-500 text-white text-sm font-medium rounded-lg h-12 px-5 w-full active:opacity-70"
-          >
-            Add Your First Product
-          </button>
-        </div>
+        <EmptyState
+          icon="📦"
+          title="No products yet"
+          description="Add your first product to get started with stock management"
+          action={{
+            label: 'Add Your First Product',
+            onClick: () => handleQuickAction('opening'),
+          }}
+        />
       ) : (
         <div className="bg-white border border-gray-200 rounded-xl p-4">
           <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">Current Stock Levels</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {products.slice(0, 6).map((product) => (
-              <div key={product.id} className="border border-gray-200 rounded-lg p-3">
-                <div className="font-medium text-gray-900 text-sm">{product.name}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {products.slice(0, 8).map((product) => (
+              <div key={product.id} className="border border-gray-200 rounded-xl p-3">
+                <div className="font-medium text-gray-900 text-sm truncate">{product.name}</div>
                 <div className="text-xs text-gray-400">{product.sku_code}</div>
                 <div className={`mt-2 text-2xl font-bold ${
-                  product.balance === 0 ? 'text-red-500' : 
+                  product.balance === 0 ? 'text-red-500' :
                   product.balance <= 5 ? 'text-orange-500' : 'text-green-600'
                 }`}>
                   {product.balance} units
@@ -127,9 +125,9 @@ export default function Home() {
               </div>
             ))}
           </div>
-          {products.length > 6 && (
+          {products.length > 8 && (
             <p className="text-xs text-gray-400 mt-4">
-              Showing 6 of {products.length} products. View all on Products page.
+              Showing 8 of {products.length} products. View all on Products page.
             </p>
           )}
         </div>

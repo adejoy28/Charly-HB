@@ -62,8 +62,8 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
 
         {/* Main content area */}
         <div className={
-          !isPublicRoute 
-            ? `md:ml-16 min-h-screen flex flex-col transition-all duration-300 ${isSideNavCollapsed ? 'lg:ml-16' : 'lg:ml-56'}` 
+          !isPublicRoute
+            ? `md:ml-16 min-h-screen flex flex-col transition-all duration-300 ${isSideNavCollapsed ? 'lg:ml-16' : 'lg:ml-56'}`
             : 'min-h-screen flex flex-col'
         }>
 
@@ -80,12 +80,12 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
           <main className={
             isPublicRoute
               ? 'min-h-screen'
-              : 'flex-1 px-4 pt-4 pb-24 md:pb-8 md:px-6 lg:px-8'
+              : 'flex-1 px-4 pt-4 pb-24 md:pb-8 md:px-6 lg:px-8 xl:px-10'
           }>
             {isPublicRoute ? (
               children
             ) : (
-              <div className="max-w-5xl mx-auto w-full">
+              <div className="max-w-5xl lg:max-w-6xl xl:max-w-7xl mx-auto w-full">
                 {children}
               </div>
             )}

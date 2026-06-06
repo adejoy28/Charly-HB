@@ -136,15 +136,15 @@ export default function MovementsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-xl font-semibold text-gray-900">Movements</h1>
-        <p className="text-sm text-gray-700 mt-2">Complete log of all stock movements</p>
+        <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">Movements</h1>
+        <p className="text-sm text-gray-500 mt-1">Complete log of all stock movements</p>
       </div>
 
       {/* Filter toggle button */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-1">
         <p className="text-sm text-gray-500">{movements.length} movement{movements.length !== 1 ? 's' : ''}</p>
         <div className="flex items-center gap-2">
           {activeFilterCount > 0 && (
@@ -157,7 +157,7 @@ export default function MovementsPage() {
           )}
           <button
             onClick={handleExport}
-            className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 bg-white active:opacity-70"
+            className="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl border border-gray-200 text-gray-600 bg-white active:opacity-70"
             title="Export to CSV"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
@@ -167,7 +167,7 @@ export default function MovementsPage() {
           </button>
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className={`flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg border active:opacity-70 ${
+            className={`flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl border active:opacity-70 ${
               activeFilterCount > 0
                 ? 'border-orange-500 text-orange-500 bg-orange-50'
                 : 'border-gray-200 text-gray-600 bg-white'
@@ -188,14 +188,14 @@ export default function MovementsPage() {
 
       {/* Collapsible filter panel */}
       {filtersOpen && (
-        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-4 space-y-3">
+        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-1 md:grid md:grid-cols-2 md:gap-3 md:space-y-0 space-y-3">
           {/* Type */}
           <div>
             <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Type</label>
             <select
               value={filters.type}
               onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
             >
               <option value="all">All Types</option>
               <option value="opening">Opening</option>
@@ -212,7 +212,7 @@ export default function MovementsPage() {
             <select
               value={filters.product_id}
               onChange={(e) => handleFilterChange('product_id', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
             >
               <option value="">All Products</option>
               {Array.isArray(products) ? products.map((product: Product) => (
@@ -231,7 +231,7 @@ export default function MovementsPage() {
             <select
               value={filters.shop_id}
               onChange={(e) => handleFilterChange('shop_id', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
             >
               <option value="">All Shops</option>
               {shops.filter(shop => !shop.archived).map(shop => (
@@ -248,7 +248,7 @@ export default function MovementsPage() {
                 type="date"
                 value={filters.from}
                 onChange={(e) => handleFilterChange('from', e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+                className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
               />
             </div>
             <div>
@@ -257,25 +257,27 @@ export default function MovementsPage() {
                 type="date"
                 value={filters.to}
                 onChange={(e) => handleFilterChange('to', e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+                className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
               />
             </div>
           </div>
 
-          {/* Apply button */}
-          <button
-            onClick={() => setFiltersOpen(false)}
-            className="w-full h-10 bg-orange-500 text-white text-sm font-medium rounded-lg active:opacity-70"
-          >
-            Apply Filters
-          </button>
+          {/* Apply button — full width on mobile, spans both cols on desktop */}
+          <div className="md:col-span-2">
+            <button
+              onClick={() => setFiltersOpen(false)}
+              className="w-full h-12 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70"
+            >
+              Apply Filters
+            </button>
+          </div>
         </div>
       )}
 
       {/* Movements Table */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="px-4 lg:px-6 py-4 border-b border-gray-200">
+          <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">
             Movements ({movements.length})
           </h3>
         </div>
@@ -298,52 +300,52 @@ export default function MovementsPage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Time
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Recorded by
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Product
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Type
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Quantity
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Value
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Shop / Note
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                     Status
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-100">
                 {movements.map((movement) => (
                   <tr key={movement.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {formatDate(movement.recorded_at)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {formatTime(movement.recorded_at)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       <span className="text-xs text-gray-500">{movement.recorded_by || '—'}</span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900">
                           {movement.product?.name || 'Unknown'}
@@ -353,17 +355,17 @@ export default function MovementsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       <TypeBadge type={movement.type} />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       <div className={`text-sm font-medium ${
                         movement.qty > 0 ? 'text-green-600' : 'text-red-600'
                       }`}>
                         {movement.qty > 0 ? '+' : ''}{formatNumber(movement.qty)}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       {movement.type === 'distribution' && movement.selling_price != null ? (
                         <div>
                           <div className="text-sm text-gray-700">
@@ -379,7 +381,7 @@ export default function MovementsPage() {
                         <div className="text-sm text-gray-300">—</div>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {movement.shop?.name || movement.note || '-'}
                         {movement.type === 'correction' && movement.note && (
@@ -389,13 +391,13 @@ export default function MovementsPage() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                       {movement.status && (
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          movement.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          movement.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                          movement.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                          'bg-gray-100 text-gray-800'
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                          movement.status === 'pending' ? 'bg-yellow-50 text-yellow-700' :
+                          movement.status === 'rejected' ? 'bg-red-50 text-red-500' :
+                          movement.status === 'confirmed' ? 'bg-green-50 text-green-600' :
+                          'bg-gray-100 text-gray-600'
                         }`}>
                           {movement.status}
                         </span>
@@ -464,7 +466,7 @@ export default function MovementsPage() {
             setPage(next)
             fetchMovements(next)
           }}
-          className="w-full h-11 border border-gray-200 text-sm text-gray-500 rounded-xl active:opacity-70 mt-2"
+          className="w-full h-12 border border-gray-200 text-sm text-gray-500 rounded-xl active:opacity-70 mt-2"
         >
           Load more
         </button>

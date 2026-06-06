@@ -128,107 +128,102 @@ export default function ProfilePage() {
     router.replace('/login')
   }
 
-  const inputClass = "w-full h-12 px-4 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:border-orange-500"
+  const inputClass = "w-full h-12 px-4 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500"
+  const labelClass = "block text-xs text-gray-500 mb-1"
 
   return (
-    <div className="space-y-4 dark:bg-gray-900">
-      {/* Header */}
-      <div className="flex items-center gap-3">
+    <div className="space-y-4">
+      {/* Profile header card */}
+      <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-3">
         <div className="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center shrink-0">
           <span className="text-white text-xl font-bold">
             {user?.name?.charAt(0).toUpperCase() || 'U'}
           </span>
         </div>
-        <div>
-          <p className="text-base font-bold text-gray-900 dark:text-gray-100">{user?.name}</p>
-          <p className="text-xs text-gray-400 dark:text-gray-500">
+        <div className="min-w-0">
+          <p className="text-base font-bold text-gray-900 truncate">{user?.name}</p>
+          <p className="text-xs text-gray-400 truncate">
             {user?.email || user?.username || user?.phone}
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-500 dark:text-red-300">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-500">
           {error}
         </div>
       )}
       {success && (
-        <div className="p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-xl text-sm text-green-600 dark:text-green-300">
+        <div className="p-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-600">
           {success}
         </div>
       )}
 
       {/* Personal info */}
-      <div>
-        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">
-          Personal Info
-        </p>
-        <div className="space-y-3">
-          <div>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Full Name</label>
-            <input type="text" value={name} onChange={e => setName(e.target.value)} className={inputClass} />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} className={inputClass} placeholder="Optional" autoCapitalize="none" />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Username</label>
-            <input type="text" value={username} onChange={e => setUsername(e.target.value)} className={inputClass} placeholder="Optional" autoCapitalize="none" />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Phone</label>
-            <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className={inputClass} placeholder="Optional" />
-          </div>
+      <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">Personal Info</h3>
+        <div>
+          <label className={labelClass}>Full Name</label>
+          <input type="text" value={name} onChange={e => setName(e.target.value)} className={inputClass} />
+        </div>
+        <div>
+          <label className={labelClass}>Email</label>
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} className={inputClass} placeholder="Optional" autoCapitalize="none" />
+        </div>
+        <div>
+          <label className={labelClass}>Username</label>
+          <input type="text" value={username} onChange={e => setUsername(e.target.value)} className={inputClass} placeholder="Optional" autoCapitalize="none" />
+        </div>
+        <div>
+          <label className={labelClass}>Phone</label>
+          <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className={inputClass} placeholder="Optional" />
         </div>
       </div>
 
       {/* Change password */}
-      <div>
-        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">
-          Change Password <span className="font-normal normal-case">(leave blank to keep current)</span>
-        </p>
-        <div className="space-y-3">
-          <div>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Current Password</label>
-            <input
-              type={showPasswords ? 'text' : 'password'}
-              value={currentPassword}
-              onChange={e => setCurrentPassword(e.target.value)}
-              className={inputClass}
-              placeholder="Required to change password"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">New Password</label>
-            <input
-              type={showPasswords ? 'text' : 'password'}
-              value={newPassword}
-              onChange={e => setNewPassword(e.target.value)}
-              className={inputClass}
-              placeholder="Min. 6 characters"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Confirm New Password</label>
-            <input
-              type={showPasswords ? 'text' : 'password'}
-              value={confirmNewPassword}
-              onChange={e => setConfirmNewPassword(e.target.value)}
-              className={`${inputClass} ${confirmNewPassword && confirmNewPassword !== newPassword ? 'border-red-300' : ''}`}
-              placeholder="Repeat new password"
-            />
-          </div>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={showPasswords}
-              onChange={e => setShowPasswords(e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-xs text-gray-500 dark:text-gray-400">Show passwords</span>
-          </label>
+      <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+          Change Password <span className="text-gray-400 font-normal normal-case">(leave blank to keep current)</span>
+        </h3>
+        <div>
+          <label className={labelClass}>Current Password</label>
+          <input
+            type={showPasswords ? 'text' : 'password'}
+            value={currentPassword}
+            onChange={e => setCurrentPassword(e.target.value)}
+            className={inputClass}
+            placeholder="Required to change password"
+          />
         </div>
+        <div>
+          <label className={labelClass}>New Password</label>
+          <input
+            type={showPasswords ? 'text' : 'password'}
+            value={newPassword}
+            onChange={e => setNewPassword(e.target.value)}
+            className={inputClass}
+            placeholder="Min. 6 characters"
+          />
+        </div>
+        <div>
+          <label className={labelClass}>Confirm New Password</label>
+          <input
+            type={showPasswords ? 'text' : 'password'}
+            value={confirmNewPassword}
+            onChange={e => setConfirmNewPassword(e.target.value)}
+            className={`${inputClass} ${confirmNewPassword && confirmNewPassword !== newPassword ? 'border-red-300' : ''}`}
+            placeholder="Repeat new password"
+          />
+        </div>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={showPasswords}
+            onChange={e => setShowPasswords(e.target.checked)}
+            className="rounded"
+          />
+          <span className="text-xs text-gray-500">Show passwords</span>
+        </label>
       </div>
 
       {/* Save */}
@@ -251,10 +246,8 @@ export default function ProfilePage() {
       </button>
 
       {/* Danger zone */}
-      <div className="pt-4 border-t border-gray-100">
-        <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3">
-          Danger Zone
-        </p>
+      <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">Danger Zone</h3>
 
         {!showDeleteConfirm ? (
           <button
@@ -278,14 +271,14 @@ export default function ProfilePage() {
               type="password"
               value={deletePassword}
               onChange={e => setDeletePassword(e.target.value)}
-              className="w-full h-10 px-3 border border-red-300 rounded-lg text-sm focus:outline-none focus:border-red-500 bg-white"
+              className="w-full h-10 px-3 border border-red-300 rounded-xl text-sm focus:outline-none focus:border-red-500 bg-white"
               placeholder="Enter your password..."
             />
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => { setShowDeleteConfirm(false); setDeletePassword(''); setDeleteError('') }}
-                className="flex-1 h-10 border border-gray-200 text-gray-600 text-sm rounded-lg active:opacity-70"
+                className="flex-1 h-10 border border-gray-200 text-gray-600 text-sm rounded-xl active:opacity-70"
               >
                 Cancel
               </button>
@@ -293,7 +286,7 @@ export default function ProfilePage() {
                 type="button"
                 onClick={handleDeleteAccount}
                 disabled={deleteLoading}
-                className="flex-1 h-10 bg-red-500 text-white text-sm font-semibold rounded-lg active:opacity-70 disabled:opacity-40"
+                className="flex-1 h-10 bg-red-500 text-white text-sm font-semibold rounded-xl active:opacity-70 disabled:opacity-40"
               >
                 {deleteLoading ? 'Deleting...' : 'Delete Forever'}
               </button>

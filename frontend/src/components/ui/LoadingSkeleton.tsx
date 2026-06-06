@@ -42,7 +42,7 @@ export default function LoadingSkeleton({ type = 'card', rows = 3 }: LoadingSkel
         </div>
         <div className="p-4 space-y-2">
           {[...Array(rows)].map((_, i) => (
-            <div key={i} className="h-12 bg-gray-100 rounded-lg"></div>
+            <div key={i} className="h-12 bg-gray-100 rounded-xl"></div>
           ))}
         </div>
       </div>
@@ -53,7 +53,7 @@ export default function LoadingSkeleton({ type = 'card', rows = 3 }: LoadingSkel
     return (
       <div className="space-y-4">
         {[...Array(rows)].map((_, i) => (
-          <div key={i} className="bg-white border border-gray-200 rounded-lg p-4 animate-pulse">
+          <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
             <div className="h-3 bg-gray-200 rounded w-1/2"></div>
           </div>

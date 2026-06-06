@@ -177,7 +177,7 @@ export default function DistributeModal() {
   if (!isOpen) return null
 
   return (
-    <BaseModal isOpen={isOpen} onClose={closeModal} title="Distribute to Shop">
+    <BaseModal isOpen={isOpen} onClose={closeModal} title="Distribute to Shop" size="wide">
 
       {/* Error */}
       {error && (
