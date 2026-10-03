@@ -1,55 +1,76 @@
 <?php
 
-/**
- * Shop Controller
- * 
- * Handles all CRUD operations for Shops.
- * Provides API endpoints for managing shop locations and their archived status.
- */
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ShopResource;
 use App\Models\Shop;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ShopController extends Controller
 {
-    // index() — filter by user
-    public function index(Request $request)
+    use ApiResponseTrait;
+
+    public function index(Request $request): JsonResponse
     {
         $shops = Shop::where('user_id', $request->user()->id)
             ->where('archived', false)
+            ->orderBy('name')
             ->get();
-        return ShopResource::collection($shops);
+
+        return $this->successResponse(
+            ShopResource::collection($shops),
+            'Shops retrieved successfully.'
+        );
     }
 
-    // store() — attach user_id
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate(['name' => 'required|string|max:255']);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
         $shop = Shop::create([
             'user_id' => $request->user()->id,
             'name'    => $validated['name'],
         ]);
-        return new ShopResource($shop);
+
+        return $this->successResponse(
+            new ShopResource($shop),
+            'Shop created successfully.',
+            Response::HTTP_CREATED
+        );
     }
 
-    // update() — verify ownership
-    public function update(Request $request, Shop $shop)
+    public function update(Request $request, Shop $shop): JsonResponse
     {
-        abort_if($shop->user_id !== $request->user()->id, 403);
-        $validated = $request->validate(['name' => 'required|string|max:255']);
+        abort_if($shop->user_id !== $request->user()->id, Response::HTTP_FORBIDDEN);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
         $shop->update($validated);
-        return new ShopResource($shop);
+
+        return $this->successResponse(
+            new ShopResource($shop),
+            'Shop updated successfully.'
+        );
     }
 
-    // destroy() — verify ownership
-    public function destroy(Request $request, Shop $shop)
+    public function destroy(Request $request, Shop $shop): JsonResponse
     {
-        abort_if($shop->user_id !== $request->user()->id, 403);
+        abort_if($shop->user_id !== $request->user()->id, Response::HTTP_FORBIDDEN);
+
         $shop->update(['archived' => true]);
-        return response()->json(null, 204);
+
+        return $this->successResponse(
+            null,
+            'Shop archived successfully.',
+            Response::HTTP_NO_CONTENT
+        );
     }
 }

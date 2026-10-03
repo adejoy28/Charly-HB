@@ -19,13 +19,14 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
+    'allowed_origins' => array_filter([
+        env('FRONTEND_URL', 'http://localhost:3000'),
         'https://charlyhb.adebayosystems.com.ng',
         'https://stock-meuve-web.onrender.com',
         'http://localhost:3000',
         'capacitor://localhost',
         'http://localhost',
-    ],
+    ]),
 
     'allowed_origins_patterns' => [],
 

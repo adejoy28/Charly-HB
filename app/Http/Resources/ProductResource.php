@@ -26,7 +26,7 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'sku_code' => $this->sku_code,
             'cost_price' => (float) $this->cost_price,
-            'balance' => $this->balance(),
+            'balance'    => (float) $this->balance,
         ];
     }
 }

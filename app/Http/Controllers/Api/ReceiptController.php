@@ -3,57 +3,35 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Movements\ReceiptRequest;
 use App\Http\Resources\MovementResource;
-use App\Models\Movement;
-use App\Models\Product;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Services\MovementService;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReceiptController extends Controller
 {
-    public function store(Request $request)
+    use ApiResponseTrait;
+
+    public function __construct(
+        protected MovementService $movementService
+    ) {}
+
+    /**
+     * Record goods receipt into the warehouse.
+     */
+    public function store(ReceiptRequest $request): JsonResponse
     {
-        $request->validate([
-            'products'              => 'required|array|min:1',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.qty'        => 'required|integer|min:1|max:10000',
-            'note'                  => 'nullable|string|max:500',
-        ]);
+        $movements = $this->movementService->recordReceipt(
+            $request->user(),
+            $request->validated()
+        );
 
-        $userId    = $request->user()->id;
-        $movements = [];
-
-        foreach ($request->products as $productData) {
-            // Ensure product belongs to this user
-            $product = Product::where('id', $productData['product_id'])
-                ->where('user_id', $userId)
-                ->first();
-
-            if (!$product) continue;
-
-            $movements[] = Movement::create([
-                'user_id'     => $userId,
-                'product_id'  => $productData['product_id'],
-                'type'        => 'receipt',
-                'qty'         => $productData['qty'],
-                'status'      => 'confirmed',
-                'note'        => $request->note ?? null,
-                'recorded_at' => now(),
-                'recorded_by'  => $request->user()->name,
-            ]);
-        }
-
-        if (empty($movements)) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'No valid products to record.',
-            ], 422);
-        }
-
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Goods receipt recorded successfully.',
-            'data'    => MovementResource::collection($movements),
-        ], 201);
+        return $this->successResponse(
+            MovementResource::collection($movements),
+            'Goods receipt recorded successfully.',
+            Response::HTTP_CREATED
+        );
     }
 }

@@ -1,66 +1,37 @@
 <?php
 
-/**
- * Correction Controller
- * 
- * Handles stock correction operations.
- * Provides endpoints for inventory adjustments and corrections.
- */
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Movements\CorrectionRequest;
 use App\Http\Resources\MovementResource;
-use App\Models\Movement;
-use Illuminate\Http\Request;
+use App\Services\MovementService;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class CorrectionController extends Controller
 {
+    use ApiResponseTrait;
+
+    public function __construct(
+        protected MovementService $movementService
+    ) {}
+
     /**
-     * Record stock correction
-     *
-     * Records a stock correction (positive or negative) for inventory adjustments.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Record inventory correction.
      */
-    public function store(Request $request)
+    public function store(CorrectionRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'qty'        => 'required|integer|not_in:0|min:-10000|max:10000',
-            'shop_id'    => 'nullable|exists:shops,id',
-            'note'       => 'required|string|min:5|max:500',
-        ]);
+        $movement = $this->movementService->recordCorrection(
+            $request->user(),
+            $request->validated()
+        );
 
-        // Ensure product belongs to this user
-        $product = \App\Models\Product::where('id', $validated['product_id'])
-            ->where('user_id', $request->user()->id)
-            ->first();
-
-        if (!$product) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Product not found.',
-            ], 404);
-        }
-
-        $movement = Movement::create([
-            'user_id'     => $request->user()->id,
-            'product_id'  => $validated['product_id'],
-            'type'        => 'correction',
-            'qty'         => $validated['qty'],
-            'shop_id'     => $validated['shop_id'] ?? null,
-            'status'      => 'confirmed',
-            'note'        => $validated['note'],
-            'recorded_at' => now(),
-            'recorded_by' => $request->user()->name,
-        ]);
-
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Correction recorded successfully.',
-            'data'    => new MovementResource($movement),
-        ], 201);
+        return $this->successResponse(
+            new MovementResource($movement),
+            'Stock correction recorded successfully.',
+            Response::HTTP_CREATED
+        );
     }
 }

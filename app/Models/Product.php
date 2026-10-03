@@ -10,11 +10,20 @@ class Product extends Model
 {
     protected $fillable = ['name', 'sku_code', 'cost_price', 'user_id'];
 
-    public function balance(): float
+    public function getBalanceAttribute(): float
     {
-        return $this->movements()
+        if (array_key_exists('balance', $this->attributes)) {
+            return (float) $this->attributes['balance'];
+        }
+
+        return (float) $this->movements()
             ->where('status', 'confirmed')
             ->sum('qty');
+    }
+
+    public function balance(): float
+    {
+        return $this->getBalanceAttribute();
     }
 
     public function movements(): HasMany

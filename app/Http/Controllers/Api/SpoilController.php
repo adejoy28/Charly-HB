@@ -1,126 +1,64 @@
 <?php
 
-/**
- * Spoil Controller
- * 
- * Handles spoil management operations.
- * Provides endpoints for recording and managing spoiled inventory.
- */
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Movements\SpoilRequest;
 use App\Http\Resources\MovementResource;
-use App\Models\Movement;
+use App\Services\MovementService;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class SpoilController extends Controller
 {
+    use ApiResponseTrait;
+
+    public function __construct(
+        protected MovementService $movementService
+    ) {}
+
     /**
-     * Record spoil
-     *
-     * Records a spoil entry with pending status. Requires confirmation before affecting inventory balance.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Record a pending spoil entry.
      */
-    public function store(Request $request)
+    public function store(SpoilRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'qty'        => 'required|integer|min:1|max:10000',
-            'reason'     => 'required|in:damaged,expired,returned',
-            'note'       => 'nullable|string|max:500',
-        ]);
+        $movement = $this->movementService->recordSpoil(
+            $request->user(),
+            $request->validated()
+        );
 
-        // Ensure product belongs to this user
-        $product = \App\Models\Product::where('id', $validated['product_id'])
-            ->where('user_id', $request->user()->id)
-            ->first();
-
-        if (!$product) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Product not found.',
-            ], 404);
-        }
-
-        $movement = Movement::create([
-            'user_id'     => $request->user()->id,
-            'product_id'  => $validated['product_id'],
-            'type'        => 'spoil',
-            'qty'         => -$validated['qty'],
-            'reason'      => $validated['reason'],
-            'status'      => 'pending',
-            'note'        => $validated['note'] ?? null,
-            'recorded_at' => now(),
-            'recorded_by' => $request->user()->name,
-        ]);
-
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Spoil recorded successfully.',
-            'data'    => new MovementResource($movement),
-        ], 201);
+        return $this->successResponse(
+            new MovementResource($movement),
+            'Spoil recorded successfully.',
+            Response::HTTP_CREATED
+        );
     }
 
     /**
-     * Confirm spoil
-     *
-     * Confirms a pending spoil entry, which will affect the inventory balance.
-     *
-     * @param \App\Models\Movement $movement
-     * @return \Illuminate\Http\JsonResponse
+     * Confirm a pending spoil entry.
      */
-    public function confirm(Request $request, $id)
+    public function confirm(Request $request, int $id): JsonResponse
     {
-        $movement = Movement::where('id', $id)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $movement = $this->movementService->confirmSpoil($request->user(), $id);
 
-        if ($movement->type !== 'spoil' || $movement->status !== 'pending') {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Only pending spoils can be confirmed.',
-            ], 400);
-        }
-
-        $movement->update(['status' => 'confirmed']);
-
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Spoil confirmed successfully.',
-            'data'    => new MovementResource($movement),
-        ]);
+        return $this->successResponse(
+            new MovementResource($movement),
+            'Spoil confirmed successfully.'
+        );
     }
 
     /**
-     * Reject spoil
-     *
-     * Rejects a pending spoil entry, which will not affect the inventory balance.
-     *
-     * @param \App\Models\Movement $movement
-     * @return \Illuminate\Http\JsonResponse
+     * Reject a pending spoil entry.
      */
-    public function reject(Request $request, $id)
+    public function reject(Request $request, int $id): JsonResponse
     {
-        $movement = Movement::where('id', $id)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $movement = $this->movementService->rejectSpoil($request->user(), $id);
 
-        if ($movement->type !== 'spoil' || $movement->status !== 'pending') {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Only pending spoils can be rejected.',
-            ], 400);
-        }
-
-        $movement->update(['status' => 'rejected']);
-
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Spoil rejected successfully.',
-            'data'    => new MovementResource($movement),
-        ]);
+        return $this->successResponse(
+            new MovementResource($movement),
+            'Spoil rejected successfully.'
+        );
     }
 }

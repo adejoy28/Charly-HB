@@ -91,6 +91,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 429);
             }
 
+            // HTTP exceptions with specific status codes (e.g. 409 Conflict)
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => $e->getMessage() ?: 'An HTTP error occurred.',
+                ], $e->getStatusCode());
+            }
+
             // Database errors
             if ($e instanceof \Illuminate\Database\QueryException) {
                 if (config('app.debug')) {
