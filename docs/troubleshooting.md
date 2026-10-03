@@ -1,4 +1,4 @@
-# StockFlow Operational & Architectural Troubleshooting Guide
+# charlyHB Operational & Architectural Troubleshooting Guide
 
 This guide details common operational failure states, known concurrency behavior, and configuration gotchas.
 
@@ -7,7 +7,7 @@ This guide details common operational failure states, known concurrency behavior
 ## 1. Concurrency, Race Conditions & Pessimistic Locks
 
 ### Symptom: `409 Conflict: Insufficient stock for [Product Name]`
-- **Cause:** StockFlow utilizes strict pessimistic row-level locking (`Product::lockForUpdate()`) within database transactions for all stock deduction movements (`distribution`, `spoil`, and negative `correction`).
+- **Cause:** charlyHB utilizes strict pessimistic row-level locking (`Product::lockForUpdate()`) within database transactions for all stock deduction movements (`distribution`, `spoil`, and negative `correction`).
 - **Resolution:** This is the expected safety invariant. Stock deductions are atomic and double-selling or negative balances are strictly rejected at the database level.
 - **Client Strategy:** On receiving HTTP `409 Conflict`, the frontend UI refreshes the active product balance from `/api/products` and warns the user that stock was depleted by a concurrent transaction.
 

@@ -1,0 +1,66 @@
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\QueryException;
+use Throwable;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__ . '/../routes/web.php',
+        api: __DIR__ . '/../routes/api.php',
+        commands: __DIR__ . '/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        //
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+
+        // 1. Force JSON for API routes
+        $exceptions->shouldRenderJsonWhen(function (Request $request) {
+            return $request->is('api/*') || $request->expectsJson();
+        });
+
+        // 2. Custom Rendering Logic (Replaces your old Handler.php)
+        $exceptions->render(function (Throwable $e, Request $request) {
+
+            if ($e instanceof ValidationException) {
+                return response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+
+            if ($e instanceof ModelNotFoundException) {
+                return response()->json([
+                    'message' => 'Resource not found.',
+                ], 404);
+            }
+
+            if ($e instanceof NotFoundHttpException) {
+                return response()->json([
+                    'message' => 'The requested resource was not found.',
+                ], 404);
+            }
+
+            if ($e instanceof QueryException && $e->getCode() === '23000') {
+                return response()->json([
+                    'message' => 'Database constraint violation.',
+                ], 409);
+            }
+
+            // 3. Global Production Safety Net (Prevents Stack Traces)
+            if (!config('app.debug')) {
+                return response()->json([
+                    'message' => 'Something went wrong, please try again.',
+                    'exception' => class_basename($e),
+                ], 500);
+            }
+        });
+    })->create();

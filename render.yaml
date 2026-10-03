@@ -1,7 +1,8 @@
 services:
   # Laravel Backend Service
   - type: web
-    name: stockflow-api
+    name: charlyhb-api
+    rootDir: app/backend
     env: php
     plan: free
     buildCommand: |
@@ -12,12 +13,14 @@ services:
       php artisan migrate --force
     startCommand: php artisan serve --host 0.0.0.0 --port $PORT
     envVars:
+      - key: APP_NAME
+        value: charlyHB
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
       - key: APP_URL
-        value: https://stock-meuve.onrender.com
+        value: https://charlyhb-api.onrender.com
       - key: LOG_CHANNEL
         value: stderr
       - key: DB_CONNECTION
@@ -37,14 +40,15 @@ services:
 
   # Next.js Frontend Service
   - type: web
-    name: stockmeuve-frontend
+    name: charlyhb-frontend
+    rootDir: app/frontend
     env: node
     plan: free
-    buildCommand: yarn install && yarn build
-    startCommand: yarn start
+    buildCommand: npm install && npm run build
+    startCommand: npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: https://stockflow-api.onrender.com/api
+        value: https://charlyhb-api.onrender.com/api
 
 databases:
-  # We're using SQLite, so no external database needed
+  # SQLite on persistent disk

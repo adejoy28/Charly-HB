@@ -1,10 +1,25 @@
-# StockFlow (Stock Meuve)
+# charlyHB
 
-A multi-tenant inventory ledger engine and distribution management platform built with **Laravel 11** (API) and **Next.js 14** (Client).
+A high-performance multi-tenant inventory ledger engine and distribution management platform built with **Laravel 11** (API) and **Next.js 14** (Client).
 
 ---
 
-## 🚀 Features
+## 📁 Repository Structure
+
+```
+charlyHB/
+├── .github/              ← CI/CD workflows
+├── app/
+│   ├── backend/          ← Laravel 11 REST API
+│   ├── frontend/         ← Next.js 14 App Router client
+│   └── shared/           ← Shared contracts & schema definitions
+├── docs/                 ← Architecture, setup, and troubleshooting documentation
+└── README.md
+```
+
+---
+
+## 🚀 Key Features
 
 - **Double-Entry Ledger Invariant:** Inventory balances are calculated strictly from immutable, confirmed movements — zero in-place mutations.
 - **Pessimistic Concurrency Protection:** Dispatches, negative corrections, and confirmed spoils employ `lockForUpdate()` within atomic transactions to eliminate double-selling and race conditions.
@@ -25,11 +40,11 @@ A multi-tenant inventory ledger engine and distribution management platform buil
 
 ## 🛠️ Technology Stack
 
-- **Backend:** Laravel 11, PHP 8.2+
-- **Frontend:** Next.js 14 (App Router), React, Tailwind CSS
+- **Backend:** Laravel 11, PHP 8.2+ (in `app/backend`)
+- **Frontend:** Next.js 14 (App Router), React, Tailwind CSS (in `app/frontend`)
 - **Database:** SQLite (local/testing), MySQL / PostgreSQL (staging/production)
 - **Auth:** Laravel Sanctum (Bearer Token / Stateful SPA)
-- **Testing:** PHPUnit / Pest
+- **Testing:** PHPUnit (Feature & Unit test suites)
 
 ---
 
@@ -38,18 +53,21 @@ A multi-tenant inventory ledger engine and distribution management platform buil
 ### 1. Backend Setup (Laravel API)
 
 ```bash
-# 1. Install dependencies
+# 1. Navigate to backend directory
+cd app/backend
+
+# 2. Install dependencies
 composer install
 
-# 2. Configure environment
+# 3. Configure environment
 cp .env.example .env
 php artisan key:generate
 
-# 3. Create database & run migrations
+# 4. Create database & run migrations
 touch database/database.sqlite
 php artisan migrate --seed
 
-# 4. Start backend server (default: port 8000)
+# 5. Start backend server (default: port 8000)
 php artisan serve
 ```
 
@@ -57,7 +75,7 @@ php artisan serve
 
 ```bash
 # 1. Navigate to frontend directory
-cd frontend
+cd app/frontend
 
 # 2. Install dependencies
 npm install
@@ -74,15 +92,18 @@ The frontend will be available at `http://localhost:3000`.
 
 ## 🧪 Automated Testing
 
-Run the feature and unit test suites:
+Run the feature and unit test suites from `app/backend`:
 
 ```bash
+cd app/backend
+
 # Run all automated tests
 php artisan test
 
-# Run specific feature tests
+# Run specific feature test suites
 php artisan test tests/Feature/Movements
 php artisan test tests/Feature/MultiTenancy
+php artisan test tests/Feature/Products
 ```
 
 ---
