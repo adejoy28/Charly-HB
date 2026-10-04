@@ -2,7 +2,7 @@
 const nextConfig = {
   // Remove static export for now - use standard Next.js build
   output: undefined,
-  trailingSlash: true,
+  trailingSlash: false,
   images: {
     unoptimized: true
   },

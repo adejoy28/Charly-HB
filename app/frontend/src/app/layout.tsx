@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/context/AuthContext'
 import { StockProvider } from '@/context/StockContext'
+import { ThemeProvider } from '@/context/ThemeContext'
 import LayoutWrapper from '@/components/layout/LayoutWrapper'
 import ErrorBoundary from '@/components/ui/ErrorBoundary'
 import { ToastProvider } from '@/components/ui/Toast'
@@ -18,8 +19,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Charly HB',
-  description: 'Stock and inventory management',
+  title: 'Charly HB — Enterprise Stock Management',
+  description: 'Enterprise multi-tenant stock and inventory tracking platform',
   manifest: '/manifest.json',
 }
 
@@ -29,20 +30,22 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
-        {/* AuthProvider must be outermost — StockProvider uses useAuth() internally */}
-        <AuthProvider>
-          <StockProvider>
-            <ToastProvider>
-              <ErrorBoundary>
-                <LayoutWrapper>
-                  {children}
-                </LayoutWrapper>
-              </ErrorBoundary>
-            </ToastProvider>
-          </StockProvider>
-        </AuthProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-orange-500/20 selection:text-orange-500`}>
+        <ThemeProvider>
+          {/* AuthProvider must be outermost — StockProvider uses useAuth() internally */}
+          <AuthProvider>
+            <StockProvider>
+              <ToastProvider>
+                <ErrorBoundary>
+                  <LayoutWrapper>
+                    {children}
+                  </LayoutWrapper>
+                </ErrorBoundary>
+              </ToastProvider>
+            </StockProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

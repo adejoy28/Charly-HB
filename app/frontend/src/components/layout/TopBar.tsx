@@ -1,5 +1,10 @@
-// TopBar — Sticky header showing app name, page title, and period toggle
+// TopBar.tsx — Enterprise glassmorphic header with live indicator, search, period filter & theme toggle
 'use client'
+
+import { useTheme } from '@/context/ThemeContext'
+import { useAuth } from '@/context/AuthContext'
+import { useStock } from '@/context/StockContext'
+import { SunIcon, MoonIcon, SearchIcon, RefreshCwIcon } from '@/components/ui/Icons'
 
 interface TopBarProps {
   title: string
@@ -8,52 +13,106 @@ interface TopBarProps {
 }
 
 export default function TopBar({ title, period, onPeriodChange }: TopBarProps) {
-  const today = new Date().toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  })
+  const { resolvedTheme, toggleTheme } = useTheme()
+  const { user } = useAuth()
+  const { refreshAllData, loading } = useStock()
 
   const periods = [
     { value: 'today', label: 'Today' },
-    { value: 'week', label: 'Week' },
-    { value: 'month', label: 'Month' },
-    { value: 'all', label: 'All' },
+    { value: 'week', label: '7D' },
+    { value: 'month', label: '30D' },
+    { value: 'all', label: 'All Time' },
   ]
 
+  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'U'
+
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
-      {/* App name bar */}
-      <div className="flex items-center justify-between px-4 lg:px-8 pt-3 pb-1">
-        <div className="flex items-center gap-2">
-          {/* Logo mark — orange circle with CHB */}
-          <div className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center shrink-0">
-            <span className="text-white text-[10px] font-bold tracking-tight">CHB</span>
+    <header className="sticky top-0 z-30 w-full glass-panel border-b border-gray-200/80 dark:border-slate-800/80 transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 gap-4">
+          
+          {/* Left: Page Title & System Status */}
+          <div className="flex items-center gap-3 min-w-0">
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
+                  {title}
+                </h1>
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Live Sync
+                </span>
+              </div>
+              <p className="hidden md:block text-xs text-gray-500 dark:text-slate-400">
+                Multi-Tenant Inventory & Real-Time Stock Ledger
+              </p>
+            </div>
           </div>
-          <span className="text-base font-bold text-gray-900 tracking-tight">Charly HB</span>
-        </div>
-        <span className="text-xs text-gray-400">{today}</span>
-      </div>
 
-      {/* Page title + period toggle */}
-      <div className="flex items-center justify-between px-4 lg:px-8 pb-2.5 pt-1">
-        <h1 className="text-sm lg:text-base font-semibold text-gray-900 truncate">{title}</h1>
+          {/* Right: Actions, Filters, Theme Switcher & Profile */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            
+            {/* Period Selector Tabs */}
+            <div className="flex items-center p-1 bg-gray-100/80 dark:bg-slate-800/80 rounded-lg border border-gray-200/50 dark:border-slate-700/50">
+              {periods.map((p) => {
+                const isActive = period === p.value
+                return (
+                  <button
+                    key={p.value}
+                    onClick={() => onPeriodChange(p.value)}
+                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all duration-150 ${
+                      isActive
+                        ? 'bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm font-semibold'
+                        : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                )
+              })}
+            </div>
 
-        {/* Period toggle — scrollable on small screens */}
-        <div className="flex gap-1 overflow-x-auto scrollbar-hide shrink-0 ml-2">
-          {periods.map((p) => (
+            {/* Quick Refresh */}
             <button
-              key={p.value}
-              onClick={() => onPeriodChange(p.value)}
-              className={`text-xs font-medium rounded-full px-3 py-1 whitespace-nowrap shrink-0 active:opacity-70 ${
-                period === p.value
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 text-gray-500'
-              }`}
+              onClick={() => refreshAllData()}
+              title="Refresh Live Data"
+              disabled={loading}
+              className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-gray-200 dark:hover:border-slate-700"
             >
-              {p.label}
+              <RefreshCwIcon size={16} className={loading ? 'animate-spin text-orange-500' : ''} />
             </button>
-          ))}
+
+            {/* Dark / Light Mode Toggle */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              title={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
+              className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-gray-200/50 dark:border-slate-700/50"
+            >
+              {resolvedTheme === 'dark' ? (
+                <SunIcon size={17} className="text-amber-400 hover:rotate-45 transition-transform" />
+              ) : (
+                <MoonIcon size={17} className="text-slate-700 hover:-rotate-12 transition-transform" />
+              )}
+            </button>
+
+            {/* User Profile Chip */}
+            <div className="flex items-center gap-2 pl-2 border-l border-gray-200 dark:border-slate-800">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white font-bold text-xs shadow-sm shadow-orange-500/20">
+                {userInitial}
+              </div>
+              <div className="hidden xl:block text-left">
+                <div className="text-xs font-semibold text-gray-900 dark:text-white leading-tight">
+                  {user?.name || 'Administrator'}
+                </div>
+                <div className="text-[10px] text-gray-400 dark:text-slate-500 leading-tight">
+                  @{user?.username || 'tenant'}
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </div>
     </header>

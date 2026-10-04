@@ -7,6 +7,8 @@ export interface Product {
   sku_code: string
   cost_price: number
   balance: number
+  unit_type?: string
+  description?: string
 }
 
 export interface Shop {

@@ -49,7 +49,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-50/50 dark:bg-[#090d16] text-gray-900 dark:text-slate-100 transition-colors">
 
         {/* SideNav — only on authenticated pages, desktop */}
         {!isPublicRoute && (

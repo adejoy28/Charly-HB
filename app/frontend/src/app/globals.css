@@ -1,18 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-subtle: #f1f5f9;
+  
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  
+  --accent-orange: #f97316;
+  --accent-orange-hover: #ea580c;
+  --accent-orange-subtle: #fff7ed;
+  
+  --badge-green-bg: #ecfdf5;
+  --badge-green-text: #047857;
+  --badge-green-border: #a7f3d0;
+  
+  --badge-amber-bg: #fffbeb;
+  --badge-amber-text: #b45309;
+  --badge-amber-border: #fde68a;
+  
+  --badge-red-bg: #fef2f2;
+  --badge-red-text: #b91c1c;
+  --badge-red-border: #fecaca;
+}
+
+.dark {
+  --bg-app: #090d16;
+  --bg-surface: #111827;
+  --bg-surface-elevated: #1e293b;
+  --bg-subtle: #172033;
+  
+  --border-subtle: #1e293b;
+  --border-strong: #334155;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --accent-orange: #f97316;
+  --accent-orange-hover: #fb923c;
+  --accent-orange-subtle: rgba(249, 115, 22, 0.15);
+  
+  --badge-green-bg: rgba(16, 185, 129, 0.12);
+  --badge-green-text: #34d399;
+  --badge-green-border: rgba(16, 185, 129, 0.3);
+  
+  --badge-amber-bg: rgba(245, 158, 11, 0.12);
+  --badge-amber-text: #fbbf24;
+  --badge-amber-border: rgba(245, 158, 11, 0.3);
+  
+  --badge-red-bg: rgba(239, 68, 68, 0.12);
+  --badge-red-text: #f87171;
+  --badge-red-border: rgba(239, 68, 68, 0.3);
+}
+
 body {
-  background: #ffffff;
-  color: #111111;
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Fix placeholder contrast for accessibility */
-::placeholder {
-  color: #9ca3af;
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-::placeholder {
-  color: #9ca3af;
+.dark .glass-panel {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
 }
 
 .scrollbar-hide {
@@ -21,4 +111,8 @@ body {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+::placeholder {
+  color: var(--text-muted);
 }

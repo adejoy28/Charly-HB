@@ -1,12 +1,11 @@
-// BottomNav — Fixed bottom navigation with 4 primary tabs + More sheet
-// More sheet contains Shops and Reports
-
+// BottomNav — Fixed bottom navigation with 4 primary tabs + More sheet with theme styling
 'use client'
 
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import MoreSheet from './MoreSheet'
+import { PackageIcon, AlertTriangleIcon } from '@/components/ui/Icons'
 
 interface BottomNavProps {
   pendingSpoilsCount?: number
@@ -42,28 +41,20 @@ export default function BottomNav({ pendingSpoilsCount = 0 }: BottomNavProps) {
     {
       href: '/products',
       label: 'Products',
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-      ),
+      icon: <PackageIcon size={20} />,
     },
     {
       href: '/spoils',
       label: 'Spoils',
       badge: pendingSpoilsCount > 0,
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-      ),
+      icon: <AlertTriangleIcon size={20} />,
     },
   ]
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
-        <div className="flex justify-around items-center py-1">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-gray-200 dark:border-slate-800 transition-colors">
+        <div className="flex justify-around items-center py-1.5 px-1 max-w-lg mx-auto">
 
           {/* Primary tabs */}
           {tabs.map((tab) => {
@@ -72,17 +63,19 @@ export default function BottomNav({ pendingSpoilsCount = 0 }: BottomNavProps) {
               <Link
                 key={tab.href}
                 href={tab.href}
-                className={`flex flex-col items-center justify-center py-2 px-2 flex-1 relative ${
-                  isActive ? 'text-orange-500' : 'text-gray-400'
+                className={`flex flex-col items-center justify-center py-1.5 px-2 flex-1 relative transition-colors ${
+                  isActive
+                    ? 'text-orange-500 font-semibold'
+                    : 'text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300'
                 }`}
               >
                 <div className="relative">
                   {tab.icon}
                   {tab.badge && (
-                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
+                    <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-rose-500 border-2 border-white dark:border-slate-900 rounded-full animate-pulse" />
                   )}
                 </div>
-                <span className="text-xs mt-0.5 truncate w-full text-center">{tab.label}</span>
+                <span className="text-[11px] mt-1 truncate w-full text-center">{tab.label}</span>
               </Link>
             )
           })}
@@ -90,14 +83,16 @@ export default function BottomNav({ pendingSpoilsCount = 0 }: BottomNavProps) {
           {/* More tab */}
           <button
             onClick={() => setMoreOpen(true)}
-            className={`flex flex-col items-center justify-center py-2 px-2 flex-1 ${
-              moreIsActive ? 'text-orange-500' : 'text-gray-400'
+            className={`flex flex-col items-center justify-center py-1.5 px-2 flex-1 transition-colors ${
+              moreIsActive
+                ? 'text-orange-500 font-semibold'
+                : 'text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300'
             }`}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            <span className="text-xs mt-0.5">More</span>
+            <span className="text-[11px] mt-1">More</span>
           </button>
 
         </div>
