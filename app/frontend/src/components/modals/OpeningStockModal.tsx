@@ -84,9 +84,9 @@ export default function OpeningStockModal() {
 
       {/* Already recorded warning */}
       {alreadyRecorded && (
-        <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-xl">
-          <p className="text-xs font-bold text-amber-700 dark:text-amber-400 mb-0.5">Already Recorded Today</p>
-          <p className="text-xs text-amber-600 dark:text-amber-300">
+        <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 rounded-lg">
+          <p className="text-xs font-medium text-amber-800 dark:text-amber-400 mb-0.5">Already Recorded Today</p>
+          <p className="text-xs text-amber-700 dark:text-amber-300">
             Opening stock was already initialized today. Recording again will append another ledger entry.
             Use Inventory Correction instead if you need to adjust discrepancies.
           </p>
@@ -94,7 +94,7 @@ export default function OpeningStockModal() {
       )}
 
       {error && (
-        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400">
+        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg text-xs font-medium text-rose-700 dark:text-rose-400">
           {error}
         </div>
       )}
@@ -105,7 +105,7 @@ export default function OpeningStockModal() {
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full px-3.5 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+          className="w-full h-10 min-h-[40px] px-3.5 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] focus:outline-none focus:border-[#ff3d00] transition-colors"
           placeholder="Filter catalog products..."
         />
       </div>
@@ -113,11 +113,11 @@ export default function OpeningStockModal() {
       {/* Product list */}
       <div className="space-y-2 max-h-72 overflow-y-auto mb-4 pr-1">
         {filteredProducts.map(product => (
-          <div key={product.id} className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/60 border border-gray-200/80 dark:border-slate-700/60 rounded-xl px-3.5 py-2.5 transition-colors">
+          <div key={product.id} className="flex items-center gap-3 bg-neutral-50 dark:bg-slate-800/60 border border-neutral-200 dark:border-slate-700 rounded-lg px-3.5 py-2.5 transition-colors">
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">{product.name}</p>
-              <p className="text-[11px] text-gray-400 dark:text-slate-400">
-                <span className="font-mono">{product.sku_code}</span> · On Hand: <strong className="text-gray-700 dark:text-slate-200">{formatNumber(product.balance)}</strong>
+              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{product.name}</p>
+              <p className="text-xs text-[#60646c] dark:text-slate-400">
+                <span className="font-mono">{product.sku_code}</span> · On Hand: <strong className="text-gray-900 dark:text-slate-200">{formatNumber(product.balance)}</strong>
               </p>
             </div>
             <input
@@ -127,7 +127,7 @@ export default function OpeningStockModal() {
               inputMode="numeric"
               value={openingData[product.id.toString()] || ''}
               onChange={e => setOpeningData(prev => ({ ...prev, [product.id.toString()]: e.target.value }))}
-              className="w-20 px-2 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-xs font-mono font-bold text-center text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+              className="w-20 h-10 px-2 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm font-mono font-medium text-center text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00]"
               placeholder="0"
             />
           </div>
@@ -135,25 +135,25 @@ export default function OpeningStockModal() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-gray-100 dark:border-slate-800 pt-4 space-y-2.5">
+      <div className="border-t border-neutral-200 dark:border-slate-800 pt-4 space-y-2.5">
         {totalCartons > 0 && (
           <div className="flex justify-between items-center py-1">
-            <span className="text-xs font-medium text-gray-500 dark:text-slate-400">Total Opening Quantity</span>
-            <span className="text-base font-bold text-gray-900 dark:text-white font-mono">{formatNumber(totalCartons)} units</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">Total Opening Quantity</span>
+            <span className="text-base font-medium text-gray-900 dark:text-white font-mono">{formatNumber(totalCartons)} units</span>
           </div>
         )}
         <button
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full h-11 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95 disabled:opacity-50"
+          className="w-full h-10 min-h-[40px] bg-[#ff3d00] hover:bg-[#e03600] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
         >
           {loading ? 'Recording Ledger...' : 'Commit Opening Stock'}
         </button>
         <button
           type="button"
           onClick={closeModal}
-          className="w-full h-10 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          className="w-full h-10 min-h-[40px] border border-neutral-300 dark:border-slate-700 text-gray-900 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-neutral-50 dark:hover:bg-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
         >
           Cancel
         </button>

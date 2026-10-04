@@ -75,14 +75,14 @@ export default function CorrectionModal() {
     <BaseModal isOpen={isOpen} onClose={closeModal} title="Record Inventory Correction">
 
       {error && (
-        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400">
+        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg text-xs font-medium text-rose-700 dark:text-rose-400">
           {error}
         </div>
       )}
 
       {/* Product search */}
       <div className="mb-4">
-        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+        <label className="block text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1.5">
           Product to Adjust *
         </label>
         <div className="relative">
@@ -92,11 +92,11 @@ export default function CorrectionModal() {
             onChange={e => { setSearch(e.target.value); setSelectedProduct(''); setShowSuggestions(true) }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-            className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+            className="w-full h-10 min-h-[40px] px-3.5 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] focus:outline-none focus:border-[#ff3d00] transition-colors"
             placeholder="Search product..."
           />
           {showSuggestions && suggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl mt-1 max-h-44 overflow-y-auto divide-y divide-gray-100 dark:divide-slate-800">
+            <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700 rounded-lg shadow-sm mt-1 max-h-44 overflow-y-auto divide-y divide-neutral-100 dark:divide-slate-800">
               {suggestions.map(p => (
                 <button
                   key={p.id}
@@ -106,10 +106,10 @@ export default function CorrectionModal() {
                     setSearch(p.name)
                     setShowSuggestions(false)
                   }}
-                  className="w-full text-left px-3.5 py-2.5 hover:bg-orange-50/60 dark:hover:bg-orange-950/30 transition-colors"
+                  className="w-full text-left px-3.5 py-2.5 hover:bg-neutral-50 dark:hover:bg-slate-800/60 transition-colors"
                 >
-                  <p className="text-xs font-semibold text-gray-900 dark:text-white">{p.name}</p>
-                  <p className="text-[11px] text-gray-400 dark:text-slate-400 font-mono">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{p.name}</p>
+                  <p className="text-xs text-[#60646c] dark:text-slate-400 font-mono">
                     {p.sku_code} · Current Balance: {formatNumber(p.balance)}
                   </p>
                 </button>
@@ -121,38 +121,38 @@ export default function CorrectionModal() {
 
       {/* Direction: Add vs Remove */}
       <div className="mb-4">
-        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+        <label className="block text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1.5">
           Adjustment Direction *
         </label>
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => setDirection('add')}
-            className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${
+            className={`h-10 min-h-[40px] px-3 rounded-lg border text-sm font-medium transition-all ${
               direction === 'add'
-                ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                : 'border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-gray-600 dark:text-slate-400'
+                ? 'border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400'
+                : 'border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-[#60646c] dark:text-slate-400'
             }`}
           >
-            + Add Stock (Found / Surplus)
+            + Add Stock (Surplus)
           </button>
           <button
             type="button"
             onClick={() => setDirection('remove')}
-            className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${
+            className={`h-10 min-h-[40px] px-3 rounded-lg border text-sm font-medium transition-all ${
               direction === 'remove'
-                ? 'border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 shadow-xs'
-                : 'border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-gray-600 dark:text-slate-400'
+                ? 'border-[#d92d20] bg-rose-50/80 dark:bg-rose-950/40 text-[#d92d20] dark:text-rose-400'
+                : 'border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-[#60646c] dark:text-slate-400'
             }`}
           >
-            - Deduct Stock (Shortage / Count)
+            - Deduct Stock (Shortage)
           </button>
         </div>
       </div>
 
       {/* Quantity */}
       <div className="mb-4">
-        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+        <label className="block text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1.5">
           Correction Quantity *
         </label>
         <input
@@ -162,20 +162,20 @@ export default function CorrectionModal() {
           inputMode="numeric"
           value={quantity}
           onChange={e => setQuantity(e.target.value)}
-          className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs font-mono font-bold text-gray-900 dark:text-white focus:outline-none focus:border-orange-500 transition-colors"
+          className="w-full h-10 px-3.5 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm font-mono font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] transition-colors"
           placeholder="0"
         />
       </div>
 
       {/* Optional Shop */}
       <div className="mb-4">
-        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+        <label className="block text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1.5">
           Associated Shop / Location (optional)
         </label>
         <select
           value={selectedShop}
           onChange={e => setSelectedShop(e.target.value)}
-          className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500 transition-colors"
+          className="w-full h-10 min-h-[40px] px-3.5 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] transition-colors"
         >
           <option value="">Main Warehouse (Default)</option>
           {shops.filter(s => !s.archived).map((s: Shop) => (
@@ -186,13 +186,13 @@ export default function CorrectionModal() {
 
       {/* Note (Mandatory for audit trail) */}
       <div className="mb-4">
-        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+        <label className="block text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1.5">
           Audit Justification (Required) *
         </label>
         <textarea
           value={note}
           onChange={e => setNote(e.target.value)}
-          className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 resize-none transition-colors"
+          className="w-full px-3.5 py-2.5 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] focus:outline-none focus:border-[#ff3d00] resize-none transition-colors"
           rows={2}
           placeholder="Explain the count variance or recount audit notes..."
           required
@@ -200,19 +200,19 @@ export default function CorrectionModal() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-gray-100 dark:border-slate-800 pt-4 space-y-2.5">
+      <div className="border-t border-neutral-200 dark:border-slate-800 pt-4 space-y-2.5">
         <button
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full h-11 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95 disabled:opacity-50"
+          className="w-full h-10 min-h-[40px] bg-[#ff3d00] hover:bg-[#e03600] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
         >
           {loading ? 'Recording Correction...' : 'Apply Ledger Adjustment'}
         </button>
         <button
           type="button"
           onClick={closeModal}
-          className="w-full h-10 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          className="w-full h-10 min-h-[40px] border border-neutral-300 dark:border-slate-700 text-gray-900 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-neutral-50 dark:hover:bg-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
         >
           Cancel
         </button>

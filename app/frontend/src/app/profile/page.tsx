@@ -131,39 +131,39 @@ export default function ProfilePage() {
     router.replace('/login')
   }
 
-  const inputClass = "w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 rounded-xl text-xs sm:text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
-  const labelClass = "block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1"
+  const inputClass = "w-full h-10 px-4 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-xs sm:text-sm text-gray-900 dark:text-white placeholder-[#60646c] dark:placeholder-slate-500 focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
+  const labelClass = "block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1"
 
   return (
     <div className="space-y-6 max-w-3xl pb-16 animate-in fade-in duration-300">
       
       {/* ── Page Header ── */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-gray-900 dark:text-white">
           Account & Profile Settings
         </h1>
-        <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+        <p className="text-xs text-[#60646c] dark:text-slate-400 mt-1">
           Manage your personal credentials, contact info, and security credentials.
         </p>
       </div>
 
       {/* ── Profile header card ── */}
-      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-xs transition-colors flex items-center justify-between gap-4">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-5 transition-colors flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 min-w-0">
-          <div className="w-14 h-14 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl flex items-center justify-center shrink-0 shadow-md shadow-orange-500/20">
-            <span className="text-white text-xl font-black">
+          <div className="w-12 h-12 bg-[#ff3d00] rounded-lg flex items-center justify-center shrink-0">
+            <span className="text-white text-lg font-medium">
               {user?.name?.charAt(0).toUpperCase() || 'U'}
             </span>
           </div>
           <div className="min-w-0">
-            <p className="text-base font-bold text-gray-900 dark:text-white truncate">{user?.name}</p>
-            <p className="text-xs font-mono text-gray-400 dark:text-slate-500 truncate">
+            <p className="text-base font-medium text-gray-900 dark:text-white truncate">{user?.name}</p>
+            <p className="text-xs font-mono text-[#60646c] dark:text-slate-500 truncate">
               {user?.email || user?.username || user?.phone}
             </p>
           </div>
         </div>
 
-        <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+        <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
           Active Tenant
         </span>
@@ -171,19 +171,19 @@ export default function ProfilePage() {
 
       {/* Feedback Alerts */}
       {error && (
-        <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-2xl text-xs font-medium text-rose-600 dark:text-rose-400">
+        <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400">
           {error}
         </div>
       )}
       {success && (
-        <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-2xl text-xs font-medium text-emerald-600 dark:text-emerald-400">
+        <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-lg text-xs font-medium text-emerald-600 dark:text-emerald-400">
           {success}
         </div>
       )}
 
       {/* ── Personal Info ── */}
-      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs transition-colors space-y-4">
-        <h3 className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wider pb-2 border-b border-gray-100 dark:border-slate-800">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-5 sm:p-6 transition-colors space-y-4">
+        <h3 className="text-xs font-medium text-gray-900 dark:text-slate-300 uppercase tracking-wider pb-2 border-b border-gray-100 dark:border-slate-800">
           Personal Information
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -207,12 +207,12 @@ export default function ProfilePage() {
       </div>
 
       {/* ── Change Password ── */}
-      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs transition-colors space-y-4">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-5 sm:p-6 transition-colors space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-slate-800">
-          <h3 className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wider">
+          <h3 className="text-xs font-medium text-gray-900 dark:text-slate-300 uppercase tracking-wider">
             Password & Security
           </h3>
-          <span className="text-[11px] text-gray-400 dark:text-slate-500">Leave blank to retain current password</span>
+          <span className="text-[11px] text-[#60646c] dark:text-slate-500">Leave blank to retain current password</span>
         </div>
 
         <div className="space-y-3.5">
@@ -254,9 +254,9 @@ export default function ProfilePage() {
               type="checkbox"
               checked={showPasswords}
               onChange={e => setShowPasswords(e.target.checked)}
-              className="rounded text-orange-500 focus:ring-0 w-3.5 h-3.5"
+              className="rounded text-[#ff3d00] focus:ring-0 w-3.5 h-3.5"
             />
-            <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">Show password characters</span>
+            <span className="text-xs text-[#60646c] dark:text-slate-400 font-medium">Show password characters</span>
           </label>
         </div>
       </div>
@@ -267,7 +267,7 @@ export default function ProfilePage() {
           type="button"
           onClick={handleSave}
           disabled={loading}
-          className="w-full sm:flex-1 h-11 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-xl shadow-xs active:scale-95 disabled:opacity-50 transition-all"
+          className="w-full sm:flex-1 h-10 bg-[#ff3d00] hover:bg-[#e03600] text-white text-xs font-medium rounded-lg active:scale-[0.98] disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
         >
           {loading ? 'Saving Changes...' : 'Save Profile Changes'}
         </button>
@@ -275,56 +275,56 @@ export default function ProfilePage() {
         <button
           type="button"
           onClick={handleLogout}
-          className="w-full sm:w-auto px-6 h-11 border border-rose-300 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-bold rounded-xl active:scale-95 transition-all"
+          className="w-full sm:w-auto px-6 h-10 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-medium rounded-lg active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
         >
           Sign Out
         </button>
       </div>
 
       {/* ── Danger Zone ── */}
-      <div className="bg-white dark:bg-slate-900 border border-rose-200/60 dark:border-rose-900/40 rounded-2xl p-5 sm:p-6 shadow-xs transition-colors space-y-3">
-        <h3 className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider pb-2 border-b border-rose-100 dark:border-rose-900/40">
+      <div className="bg-white dark:bg-slate-900 border border-rose-200/60 dark:border-rose-900/40 rounded-lg p-5 sm:p-6 transition-colors space-y-3">
+        <h3 className="text-xs font-medium text-[#d92d20] dark:text-rose-400 uppercase tracking-wider pb-2 border-b border-rose-100 dark:border-rose-900/40">
           Danger Zone
         </h3>
 
         {!showDeleteConfirm ? (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold text-gray-800 dark:text-slate-200">Delete Account & Warehouse Data</p>
-              <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5">
+              <p className="text-xs font-medium text-gray-900 dark:text-slate-200">Delete Account & Warehouse Data</p>
+              <p className="text-[11px] text-[#60646c] dark:text-slate-500 mt-0.5">
                 Permanently purge all catalog items, movements, distribution logs and history.
               </p>
             </div>
             <button
               type="button"
               onClick={() => setShowDeleteConfirm(true)}
-              className="px-4 py-2 border border-rose-300 dark:border-rose-800 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-bold rounded-xl active:scale-95 transition-all self-start sm:self-auto"
+              className="h-10 px-4 border border-rose-300 dark:border-rose-800 text-[#d92d20] hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-medium rounded-lg active:scale-[0.98] transition-all self-start sm:self-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d92d20]"
             >
               Delete Account
             </button>
           </div>
         ) : (
-          <div className="bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-2xl p-4 sm:p-5 space-y-3">
-            <p className="text-xs font-bold text-rose-600 dark:text-rose-400">Irreversible Action</p>
-            <p className="text-[11px] text-rose-500 dark:text-rose-300 leading-relaxed">
+          <div className="bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg p-4 sm:p-5 space-y-3">
+            <p className="text-xs font-medium text-[#d92d20] dark:text-rose-400">Irreversible Action</p>
+            <p className="text-[11px] text-[#d92d20] dark:text-rose-300 leading-relaxed">
               All your products, branch stores, stock ledger movements, and audit reports will be permanently deleted.
               Enter your password to verify authorization.
             </p>
             {deleteError && (
-              <p className="text-xs text-rose-600 dark:text-rose-400 font-bold">{deleteError}</p>
+              <p className="text-xs text-[#d92d20] dark:text-rose-400 font-medium">{deleteError}</p>
             )}
             <input
               type="password"
               value={deletePassword}
               onChange={e => setDeletePassword(e.target.value)}
-              className="w-full h-10 px-3.5 border border-rose-300 dark:border-rose-800 rounded-xl text-xs focus:outline-none focus:border-rose-500 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-400"
+              className="w-full h-10 px-3.5 border border-rose-300 dark:border-rose-800 rounded-lg text-xs focus:outline-none focus:border-[#d92d20] bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-[#60646c]"
               placeholder="Enter current password to authorize..."
             />
             <div className="flex gap-2 pt-1">
               <button
                 type="button"
                 onClick={() => { setShowDeleteConfirm(false); setDeletePassword(''); setDeleteError('') }}
-                className="flex-1 h-9 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all"
+                className="flex-1 h-10 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-slate-300 text-xs font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-[0.98] transition-all"
               >
                 Cancel
               </button>
@@ -332,7 +332,7 @@ export default function ProfilePage() {
                 type="button"
                 onClick={handleDeleteAccount}
                 disabled={deleteLoading}
-                className="flex-1 h-9 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl active:scale-95 disabled:opacity-50 transition-all shadow-xs"
+                className="flex-1 h-10 bg-[#d92d20] hover:bg-[#b42318] text-white text-xs font-medium rounded-lg active:scale-[0.98] disabled:opacity-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d92d20]"
               >
                 {deleteLoading ? 'Deleting...' : 'Confirm Deletion'}
               </button>

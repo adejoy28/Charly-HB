@@ -40,17 +40,17 @@ export default function BaseModal({ isOpen, onClose, title, children, size = 'de
 
       {/* Bottom sheet on mobile, centered dialog on desktop */}
       <div 
-        className={`fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 text-gray-900 dark:text-white border-t md:border border-gray-200/80 dark:border-slate-800 rounded-t-3xl md:mx-auto md:rounded-2xl md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2 shadow-2xl transition-colors duration-150 animate-in zoom-in-95 duration-200 ${sizeClass}`}
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 text-gray-900 dark:text-white border-t md:border border-gray-200 dark:border-slate-800 rounded-t-2xl md:mx-auto md:rounded-lg md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2 shadow-xl transition-colors duration-150 animate-in zoom-in-95 duration-200 ${sizeClass}`}
       >
         {/* Drag handle */}
         <div className="w-10 h-1 bg-gray-300 dark:bg-slate-700 rounded-full mx-auto mt-3 mb-2 md:hidden" />
 
         {/* Modal header */}
         <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-gray-100 dark:border-slate-800">
-          <h3 className="text-base font-bold text-gray-900 dark:text-white tracking-tight">{title}</h3>
+          <h3 className="text-base font-medium text-gray-900 dark:text-white tracking-tight">{title}</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 dark:text-slate-400 hover:text-gray-700 dark:hover:text-white p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+            className="text-[#60646c] dark:text-slate-400 hover:text-gray-900 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

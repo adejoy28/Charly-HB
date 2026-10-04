@@ -34,13 +34,13 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden animate-pulse">
-        <div className="px-4 lg:px-6 py-4 border-b border-gray-200/80 dark:border-slate-800">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg overflow-hidden animate-pulse">
+        <div className="px-4 lg:px-6 py-4 border-b border-gray-200 dark:border-slate-800">
           <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded w-1/4"></div>
         </div>
         <div className="p-4 space-y-2">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-12 bg-gray-100 dark:bg-slate-800/60 rounded-xl"></div>
+            <div key={i} className="h-10 bg-gray-100 dark:bg-slate-800/60 rounded-lg"></div>
           ))}
         </div>
       </div>
@@ -49,50 +49,50 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
 
   if (!movements || movements.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden">
-        <div className="px-4 lg:px-6 py-4 border-b border-gray-200/80 dark:border-slate-800">
-          <h3 className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Movements</h3>
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg overflow-hidden">
+        <div className="px-4 lg:px-6 py-4 border-b border-gray-200 dark:border-slate-800">
+          <h3 className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">Movements</h3>
         </div>
         <div className="p-8 text-center">
-          <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full mx-auto mb-3 flex items-center justify-center">
-            <span className="text-2xl text-gray-400">📋</span>
+          <div className="w-12 h-12 bg-[#f8fafc] dark:bg-slate-800 rounded-lg mx-auto mb-3 flex items-center justify-center border border-gray-200 dark:border-slate-700">
+            <span className="text-2xl text-[#60646c]">📋</span>
           </div>
-          <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1">No movements recorded yet</h3>
-          <p className="text-xs text-gray-500 dark:text-slate-400">Start by recording opening stock or receiving goods</p>
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">No movements recorded yet</h3>
+          <p className="text-xs text-[#60646c] dark:text-slate-400">Start by recording opening stock or receiving goods</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
-      <div className="px-4 lg:px-6 py-4 border-b border-gray-200/80 dark:border-slate-800">
-        <h3 className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Movements</h3>
+    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg overflow-hidden">
+      <div className="px-4 lg:px-6 py-4 border-b border-gray-200 dark:border-slate-800">
+        <h3 className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">Movements</h3>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200/80 dark:divide-slate-800">
-          <thead className="bg-slate-50/80 dark:bg-slate-800/50">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-800">
+          <thead className="bg-[#f8fafc] dark:bg-slate-800/50">
             <tr>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Date
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Time
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Product
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Type
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Quantity
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Shop / Note
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Status
               </th>
             </tr>
@@ -106,16 +106,16 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
                   </div>
                 </td>
                 <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                  <div className="text-xs font-mono text-gray-500 dark:text-slate-400">
+                  <div className="text-xs font-mono text-[#60646c] dark:text-slate-400">
                     {formatTime(movement.recorded_at)}
                   </div>
                 </td>
                 <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   <div>
-                    <div className="text-xs font-bold text-gray-900 dark:text-white">
+                    <div className="text-xs font-medium text-gray-900 dark:text-white">
                       {movement.product?.name || 'Unknown'}
                     </div>
-                    <div className="text-[11px] font-mono text-gray-400 dark:text-slate-500">
+                    <div className="text-[11px] font-mono text-[#60646c] dark:text-slate-500">
                       {movement.product?.sku_code || ''}
                     </div>
                   </div>
@@ -124,7 +124,7 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
                   <TypeBadge type={movement.type} />
                 </td>
                 <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                  <div className={`text-xs font-bold font-mono ${
+                  <div className={`text-xs font-medium font-mono ${
                     movement.qty > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
                   }`}>
                     {movement.qty > 0 ? '+' : ''}{formatNumber(movement.qty)}
@@ -137,11 +137,11 @@ export default function MovementsTable({ movements, loading }: MovementsTablePro
                 </td>
                 <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
                   {movement.status && (
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider ${
                       movement.status === 'pending' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20' :
                       movement.status === 'rejected' ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20' :
                       movement.status === 'confirmed' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' :
-                      'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                      'bg-[#f8fafc] dark:bg-slate-800 text-[#60646c] dark:text-slate-300 border border-gray-200 dark:border-slate-700'
                     }`}>
                       {movement.status}
                     </span>

@@ -160,21 +160,21 @@ export default function ReportsPage() {
 
         {/* Total stock value card */}
         {totalStockValue > 0 && (
-          <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-5 sm:p-6 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+              <p className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
                 Total Inventory Valuation
               </p>
-              <p className="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight text-gray-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-medium font-mono tracking-tight text-gray-900 dark:text-white">
                 {formatCurrency(totalStockValue)}
               </p>
-              <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">
+              <p className="text-xs text-[#60646c] dark:text-slate-500 mt-1">
                 Calculated as unit cost price × current warehouse balance
               </p>
             </div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 self-start sm:self-auto">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#f8fafc] dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 self-start sm:self-auto">
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span className="text-xs font-mono font-semibold text-gray-700 dark:text-slate-300">
+              <span className="text-xs font-mono font-medium text-gray-700 dark:text-slate-300">
                 {products.length} Products Monitored
               </span>
             </div>
@@ -192,10 +192,10 @@ export default function ReportsPage() {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+          <p className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
             Branch Distribution Matrix
           </p>
-          <span className="text-xs font-mono text-gray-400 dark:text-slate-500">
+          <span className="text-xs font-mono text-[#60646c] dark:text-slate-500">
             {activeShops.length} active branches
           </span>
         </div>
@@ -203,8 +203,8 @@ export default function ReportsPage() {
         {/* Mobile cards */}
         <div className="md:hidden space-y-3">
           {activeShops.length === 0 && (
-            <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-8 text-center">
-              <p className="text-xs text-gray-500 dark:text-slate-400">No active branches configured</p>
+            <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-8 text-center">
+              <p className="text-xs text-[#60646c] dark:text-slate-400">No active branches configured</p>
             </div>
           )}
           {activeShops.map(shop => {
@@ -230,19 +230,19 @@ export default function ReportsPage() {
             )
 
             return (
-              <div key={shop.id} className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs transition-colors">
+              <div key={shop.id} className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 transition-colors">
                 <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100 dark:border-slate-800">
                   <div>
-                    <p className="text-sm font-bold text-gray-900 dark:text-white">{shop.name}</p>
-                    <p className="text-[11px] text-gray-400 dark:text-slate-500">Branch Outlet</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{shop.name}</p>
+                    <p className="text-[11px] text-[#60646c] dark:text-slate-500">Branch Outlet</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-base font-extrabold font-mono text-orange-500">
+                    <p className="text-base font-medium font-mono text-[#ff3d00]">
                       {formatNumber(totalCartons)}
-                      <span className="text-[11px] font-normal text-gray-400 dark:text-slate-500 ml-1">ctns</span>
+                      <span className="text-[11px] font-normal text-[#60646c] dark:text-slate-500 ml-1">ctns</span>
                     </p>
                     {totalValue > 0 && (
-                      <p className="text-xs font-mono font-semibold text-gray-600 dark:text-slate-400">{formatCurrency(totalValue)}</p>
+                      <p className="text-xs font-mono font-medium text-gray-600 dark:text-slate-400">{formatCurrency(totalValue)}</p>
                     )}
                   </div>
                 </div>
@@ -252,9 +252,9 @@ export default function ReportsPage() {
                       <div key={pid} className="flex justify-between items-center py-1 border-t border-gray-50 dark:border-slate-800/40 text-xs">
                         <span className="text-gray-600 dark:text-slate-400">{data.name}</span>
                         <div className="text-right">
-                          <span className="font-mono font-bold text-gray-900 dark:text-white">{formatNumber(data.qty)}</span>
+                          <span className="font-mono font-medium text-gray-900 dark:text-white">{formatNumber(data.qty)}</span>
                           {data.cost_price > 0 && (
-                            <span className="font-mono text-gray-400 dark:text-slate-500 ml-2">
+                            <span className="font-mono text-[#60646c] dark:text-slate-500 ml-2">
                               {formatCurrency(data.qty * data.cost_price)}
                             </span>
                           )}
@@ -263,7 +263,7 @@ export default function ReportsPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-400 dark:text-slate-500 pt-1">
+                  <p className="text-xs text-[#60646c] dark:text-slate-500 pt-1">
                     No distributions recorded for this time range.
                   </p>
                 )}
@@ -273,16 +273,16 @@ export default function ReportsPage() {
         </div>
 
         {/* Desktop table */}
-        <div className="hidden md:block bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs transition-colors">
+        <div className="hidden md:block bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg overflow-hidden transition-colors">
           <div className="relative">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200/80 dark:divide-slate-800">
-                <thead className="bg-slate-50/80 dark:bg-slate-800/50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-800">
+                <thead className="bg-[#f8fafc] dark:bg-slate-800/50">
                   <tr>
-                    <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 min-w-[160px]">
+                    <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider sticky left-0 bg-[#f8fafc] dark:bg-slate-800 z-10 min-w-[160px]">
                       Branch Shop
                     </th>
-                    <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                    <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                       Total Cartons
                     </th>
                     <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
@@ -346,10 +346,10 @@ export default function ReportsPage() {
   const ByProductSection = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+        <p className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
           SKU Movement & Margin Breakdown
         </p>
-        <span className="text-xs font-mono text-gray-400 dark:text-slate-500">
+        <span className="text-xs font-mono text-[#60646c] dark:text-slate-500">
           {products.length} catalog items
         </span>
       </div>
@@ -363,45 +363,45 @@ export default function ReportsPage() {
           const spoiled = productData?.total_spoiled || 0
 
           return (
-            <div key={product.id} className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs transition-colors">
+            <div key={product.id} className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 transition-colors">
               <div className="flex items-start justify-between mb-3 pb-3 border-b border-gray-100 dark:border-slate-800">
                 <div>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">{product.name}</p>
-                  <p className="text-[11px] font-mono text-gray-400 dark:text-slate-500">{product.sku_code}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{product.name}</p>
+                  <p className="text-[11px] font-mono text-[#60646c] dark:text-slate-500">{product.sku_code}</p>
                 </div>
-                <div className={`text-base font-extrabold font-mono ${
+                <div className={`text-base font-medium font-mono ${
                   product.balance === 0 ? 'text-rose-500' :
-                  product.balance <= 5 ? 'text-orange-500' : 'text-emerald-500'
+                  product.balance <= 5 ? 'text-[#ff3d00]' : 'text-emerald-500'
                 }`}>
-                  {formatNumber(product.balance)} <span className="text-xs font-normal text-gray-400">bal</span>
+                  {formatNumber(product.balance)} <span className="text-xs font-normal text-[#60646c]">bal</span>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-2 py-2">
-                <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                  <p className="text-[10px] text-gray-400 dark:text-slate-500 uppercase font-semibold">Received</p>
-                  <p className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">{formatNumber(received)}</p>
+                <div className="text-center p-2 rounded-lg bg-[#f8fafc] dark:bg-slate-800/50">
+                  <p className="text-[10px] text-[#60646c] dark:text-slate-500 uppercase font-medium">Received</p>
+                  <p className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400 mt-0.5">{formatNumber(received)}</p>
                 </div>
-                <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                  <p className="text-[10px] text-gray-400 dark:text-slate-500 uppercase font-semibold">Distributed</p>
-                  <p className="text-xs font-mono font-bold text-orange-500 mt-0.5">{formatNumber(distributed)}</p>
+                <div className="text-center p-2 rounded-lg bg-[#f8fafc] dark:bg-slate-800/50">
+                  <p className="text-[10px] text-[#60646c] dark:text-slate-500 uppercase font-medium">Distributed</p>
+                  <p className="text-xs font-mono font-medium text-[#ff3d00] mt-0.5">{formatNumber(distributed)}</p>
                 </div>
-                <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                  <p className="text-[10px] text-gray-400 dark:text-slate-500 uppercase font-semibold">Spoiled</p>
-                  <p className="text-xs font-mono font-bold text-rose-500 mt-0.5">{formatNumber(spoiled)}</p>
+                <div className="text-center p-2 rounded-lg bg-[#f8fafc] dark:bg-slate-800/50">
+                  <p className="text-[10px] text-[#60646c] dark:text-slate-500 uppercase font-medium">Spoiled</p>
+                  <p className="text-xs font-mono font-medium text-rose-500 mt-0.5">{formatNumber(spoiled)}</p>
                 </div>
               </div>
 
               {productData?.total_selling_value > 0 && (
                 <div className="mt-2 pt-2 border-t border-gray-100 dark:border-slate-800 space-y-1.5 text-xs">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-400 dark:text-slate-500">Revenue</span>
-                    <span className="font-mono font-bold text-orange-500">
+                    <span className="text-[#60646c] dark:text-slate-500">Revenue</span>
+                    <span className="font-mono font-medium text-[#ff3d00]">
                       {formatCurrency(productData.total_selling_value)}
                     </span>
                   </div>
                   {productData.total_cost_value > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400 dark:text-slate-500">Cost of Goods</span>
+                      <span className="text-[#60646c] dark:text-slate-500">Cost of Goods</span>
                       <span className="font-mono text-gray-600 dark:text-slate-400">
                         {formatCurrency(productData.total_cost_value)}
                       </span>
@@ -409,8 +409,8 @@ export default function ReportsPage() {
                   )}
                   {productData.gross_margin > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400 dark:text-slate-500">Gross Margin</span>
-                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                      <span className="text-[#60646c] dark:text-slate-500">Gross Margin</span>
+                      <span className="font-mono font-medium text-emerald-600 dark:text-emerald-400">
                         {formatCurrency(productData.gross_margin)}
                       </span>
                     </div>
@@ -423,34 +423,34 @@ export default function ReportsPage() {
       </div>
 
       {/* Desktop table */}
-      <div className="hidden md:block bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs transition-colors">
+      <div className="hidden md:block bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg overflow-hidden transition-colors">
         <div className="relative">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200/80 dark:divide-slate-800">
-              <thead className="bg-slate-50/80 dark:bg-slate-800/50">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-800">
+              <thead className="bg-[#f8fafc] dark:bg-slate-800/50">
                 <tr>
-                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 min-w-[160px]">
+                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider sticky left-0 bg-[#f8fafc] dark:bg-slate-800 z-10 min-w-[160px]">
                     Product
                   </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                     Received
                   </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                     Distributed
                   </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                     Spoiled
                   </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                     Balance
                   </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                     Revenue
                   </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                     Cost
                   </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                     Margin
                   </th>
                 </tr>
@@ -465,22 +465,22 @@ export default function ReportsPage() {
                   return (
                     <tr key={product.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                       <td className="px-4 lg:px-6 py-3 sticky left-0 bg-white dark:bg-slate-900 z-10">
-                        <p className="text-xs font-bold text-gray-900 dark:text-white whitespace-nowrap">{product.name}</p>
-                        <p className="text-[11px] font-mono text-gray-400 dark:text-slate-500">{product.sku_code}</p>
+                        <p className="text-xs font-medium text-gray-900 dark:text-white whitespace-nowrap">{product.name}</p>
+                        <p className="text-[11px] font-mono text-[#60646c] dark:text-slate-500">{product.sku_code}</p>
                       </td>
-                      <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">{formatNumber(received)}</span></td>
-                      <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-bold text-orange-500">{formatNumber(distributed)}</span></td>
-                      <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-bold text-rose-500">{formatNumber(spoiled)}</span></td>
+                      <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400">{formatNumber(received)}</span></td>
+                      <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-medium text-[#ff3d00]">{formatNumber(distributed)}</span></td>
+                      <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-medium text-rose-500">{formatNumber(spoiled)}</span></td>
                       <td className="px-4 lg:px-6 py-3">
-                        <span className={`text-xs font-mono font-bold ${
+                        <span className={`text-xs font-mono font-medium ${
                           product.balance === 0 ? 'text-rose-500' :
-                          product.balance <= 5 ? 'text-orange-500' : 'text-emerald-500'
+                          product.balance <= 5 ? 'text-[#ff3d00]' : 'text-emerald-500'
                         }`}>
                           {formatNumber(product.balance)}
                         </span>
                       </td>
                       <td className="px-4 lg:px-6 py-3">
-                        <span className="text-xs font-mono font-bold text-orange-500">
+                        <span className="text-xs font-mono font-medium text-[#ff3d00]">
                           {productData?.total_selling_value ? formatCurrency(productData.total_selling_value) : '—'}
                         </span>
                       </td>
@@ -490,7 +490,7 @@ export default function ReportsPage() {
                         </span>
                       </td>
                       <td className="px-4 lg:px-6 py-3">
-                        <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                        <span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400">
                           {productData?.gross_margin ? formatCurrency(productData.gross_margin) : '—'}
                         </span>
                       </td>
@@ -511,10 +511,10 @@ export default function ReportsPage() {
   const SpoilsSection = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+        <p className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
           Spoil Loss Breakdown by Reason
         </p>
-        <span className="text-xs font-mono text-gray-400 dark:text-slate-500">
+        <span className="text-xs font-mono text-[#60646c] dark:text-slate-500">
           {spoilsData.length} records in range
         </span>
       </div>
@@ -522,34 +522,34 @@ export default function ReportsPage() {
       {/* Mobile cards */}
       <div className="md:hidden space-y-3">
         {spoilsData.length === 0 && (
-          <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-8 text-center">
-            <p className="text-xs text-gray-500 dark:text-slate-400">No spoils recorded in this period</p>
+          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-8 text-center">
+            <p className="text-xs text-[#60646c] dark:text-slate-400">No spoils recorded in this period</p>
           </div>
         )}
         {spoilsData.map(spoil => (
-          <div key={spoil.product?.id} className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs transition-colors">
+          <div key={spoil.product?.id} className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-4 sm:p-5 transition-colors">
             <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-100 dark:border-slate-800">
               <div>
-                <p className="text-sm font-bold text-gray-900 dark:text-white">{spoil.product?.name}</p>
-                <p className="text-[11px] font-mono text-gray-400 dark:text-slate-500">{spoil.product?.sku_code}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">{spoil.product?.name}</p>
+                <p className="text-[11px] font-mono text-[#60646c] dark:text-slate-500">{spoil.product?.sku_code}</p>
               </div>
-              <p className="text-base font-extrabold font-mono text-rose-500">
+              <p className="text-base font-medium font-mono text-rose-500">
                 {formatNumber(spoil.total || 0)}
-                <span className="text-xs font-normal text-gray-400 dark:text-slate-500 ml-1">total</span>
+                <span className="text-xs font-normal text-[#60646c] dark:text-slate-500 ml-1">total</span>
               </p>
             </div>
             <div className="grid grid-cols-3 gap-2 pt-1">
-              <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <p className="text-[10px] text-gray-400 dark:text-slate-500 uppercase font-semibold">Damaged</p>
-                <p className="text-xs font-mono font-bold text-orange-500 mt-0.5">{formatNumber(spoil.damaged_qty || 0)}</p>
+              <div className="text-center p-2 rounded-lg bg-[#f8fafc] dark:bg-slate-800/50">
+                <p className="text-[10px] text-[#60646c] dark:text-slate-500 uppercase font-medium">Damaged</p>
+                <p className="text-xs font-mono font-medium text-[#ff3d00] mt-0.5">{formatNumber(spoil.damaged_qty || 0)}</p>
               </div>
-              <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <p className="text-[10px] text-gray-400 dark:text-slate-500 uppercase font-semibold">Expired</p>
-                <p className="text-xs font-mono font-bold text-rose-500 mt-0.5">{formatNumber(spoil.expired_qty || 0)}</p>
+              <div className="text-center p-2 rounded-lg bg-[#f8fafc] dark:bg-slate-800/50">
+                <p className="text-[10px] text-[#60646c] dark:text-slate-500 uppercase font-medium">Expired</p>
+                <p className="text-xs font-mono font-medium text-rose-500 mt-0.5">{formatNumber(spoil.expired_qty || 0)}</p>
               </div>
-              <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                <p className="text-[10px] text-gray-400 dark:text-slate-500 uppercase font-semibold">Returned</p>
-                <p className="text-xs font-mono font-bold text-gray-600 dark:text-slate-400 mt-0.5">{formatNumber(spoil.returned_qty || 0)}</p>
+              <div className="text-center p-2 rounded-lg bg-[#f8fafc] dark:bg-slate-800/50">
+                <p className="text-[10px] text-[#60646c] dark:text-slate-500 uppercase font-medium">Returned</p>
+                <p className="text-xs font-mono font-medium text-gray-600 dark:text-slate-400 mt-0.5">{formatNumber(spoil.returned_qty || 0)}</p>
               </div>
             </div>
           </div>
@@ -557,23 +557,23 @@ export default function ReportsPage() {
       </div>
 
       {/* Desktop table */}
-      <div className="hidden md:block bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs transition-colors">
-        <table className="min-w-full divide-y divide-gray-200/80 dark:divide-slate-800">
-          <thead className="bg-slate-50/80 dark:bg-slate-800/50">
+      <div className="hidden md:block bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg overflow-hidden transition-colors">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-800">
+          <thead className="bg-[#f8fafc] dark:bg-slate-800/50">
             <tr>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Product
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Damaged (Transit)
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Expired (Shelf)
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Defective Return
               </th>
-              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <th className="px-4 lg:px-6 py-3 text-left text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Total Lost
               </th>
             </tr>
@@ -581,7 +581,7 @@ export default function ReportsPage() {
           <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800/60">
             {spoilsData.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-xs text-gray-400 dark:text-slate-500">
+                <td colSpan={5} className="px-4 py-8 text-center text-xs text-[#60646c] dark:text-slate-500">
                   No spoils recorded in this period
                 </td>
               </tr>
@@ -589,13 +589,13 @@ export default function ReportsPage() {
             {spoilsData.map(spoil => (
               <tr key={spoil.product?.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                 <td className="px-4 lg:px-6 py-3">
-                  <p className="text-xs font-bold text-gray-900 dark:text-white">{spoil.product?.name}</p>
-                  <p className="text-[11px] font-mono text-gray-400 dark:text-slate-500">{spoil.product?.sku_code}</p>
+                  <p className="text-xs font-medium text-gray-900 dark:text-white">{spoil.product?.name}</p>
+                  <p className="text-[11px] font-mono text-[#60646c] dark:text-slate-500">{spoil.product?.sku_code}</p>
                 </td>
-                <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-bold text-orange-500">{formatNumber(spoil.damaged_qty || 0)}</span></td>
-                <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-bold text-rose-500">{formatNumber(spoil.expired_qty || 0)}</span></td>
+                <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-medium text-[#ff3d00]">{formatNumber(spoil.damaged_qty || 0)}</span></td>
+                <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-medium text-rose-500">{formatNumber(spoil.expired_qty || 0)}</span></td>
                 <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono text-gray-600 dark:text-slate-400">{formatNumber(spoil.returned_qty || 0)}</span></td>
-                <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-extrabold text-rose-600 dark:text-rose-400">{formatNumber(spoil.total || 0)}</span></td>
+                <td className="px-4 lg:px-6 py-3"><span className="text-xs font-mono font-medium text-rose-600 dark:text-rose-400">{formatNumber(spoil.total || 0)}</span></td>
               </tr>
             ))}
           </tbody>
@@ -618,10 +618,10 @@ export default function ReportsPage() {
   if (loading) {
     return (
       <div className="space-y-4 pb-12 animate-in fade-in duration-300">
-        <div className="h-10 bg-slate-100 dark:bg-slate-800 rounded-2xl animate-pulse" />
+        <div className="h-10 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-24 bg-slate-100 dark:bg-slate-800 rounded-2xl animate-pulse" />
+            <div key={i} className="h-24 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
@@ -639,14 +639,14 @@ export default function ReportsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-gray-900 dark:text-white">
               Reports & Audit Analytics
             </h1>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold border border-slate-200 dark:border-slate-700 font-mono">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#f8fafc] dark:bg-slate-800 text-[#60646c] dark:text-slate-300 font-medium border border-gray-200 dark:border-slate-700 font-mono">
               {filterLabel}
             </span>
           </div>
-          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#60646c] dark:text-slate-400 mt-1">
             Aggregate inventory throughput, shop distribution metrics, and spoil audits.
           </p>
         </div>
@@ -655,10 +655,10 @@ export default function ReportsPage() {
           {/* Custom Date Range Filter Toggle */}
           <button
             onClick={() => setFilterOpen(!filterOpen)}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all active:scale-95 ${
+            className={`h-10 inline-flex items-center gap-1.5 px-3.5 rounded-lg text-xs font-medium border transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00] ${
               isCustomRange || filterOpen
-                ? 'border-orange-500 text-orange-500 bg-orange-500/10'
-                : 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'border-[#ff3d00] text-[#ff3d00] bg-[#ff3d00]/10'
+                : 'border-gray-200 dark:border-slate-700 text-gray-900 dark:text-slate-300 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             <FilterIcon size={14} />
@@ -668,21 +668,21 @@ export default function ReportsPage() {
           {/* Export CSV button */}
           <button
             onClick={handleExportCSV}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95"
+            className="h-10 inline-flex items-center gap-1.5 px-3.5 rounded-lg text-xs font-medium border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-slate-300 bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
             title="Export Report CSV"
           >
             <DownloadIcon size={14} />
-            <span className="hidden sm:inline">Export</span>
+            <span className="hidden sm:inline">Export CSV</span>
           </button>
         </div>
       </div>
 
       {/* ── Collapsible Date Filter Panel ── */}
       {filterOpen && (
-        <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 transition-all animate-in fade-in">
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-5 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 transition-all animate-in fade-in">
           {/* Quick period pills */}
           <div>
-            <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
+            <p className="text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-2.5">
               Preset Horizon
             </p>
             <div className="flex gap-2 flex-wrap">
@@ -699,10 +699,10 @@ export default function ReportsPage() {
                     setCustomFrom('')
                     setCustomTo('')
                   }}
-                  className={`text-xs font-semibold rounded-xl px-3.5 py-2 transition-all active:scale-95 ${
+                  className={`h-10 text-xs font-medium rounded-lg px-3.5 transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00] ${
                     period === p.id && !isCustomRange
-                      ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xs'
-                      : 'bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-750'
+                      ? 'bg-[#ff3d00] text-white hover:bg-[#e03600]'
+                      : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750'
                   }`}
                 >
                   {p.label}
@@ -714,13 +714,13 @@ export default function ReportsPage() {
           {/* Custom date range inputs */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+              <p className="text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                 Custom Date Window
               </p>
               {isCustomRange && (
                 <button
                   onClick={() => { setCustomFrom(''); setCustomTo('') }}
-                  className="text-xs text-orange-500 hover:text-orange-600 font-semibold"
+                  className="text-xs text-[#ff3d00] hover:underline font-medium"
                 >
                   Clear Window
                 </button>
@@ -728,21 +728,21 @@ export default function ReportsPage() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-[11px] text-gray-400 dark:text-slate-500 mb-1 font-medium">Start Date</label>
+                <label className="block text-[11px] text-[#60646c] dark:text-slate-500 mb-1 font-medium">Start Date</label>
                 <input
                   type="date"
                   value={customFrom}
                   onChange={(e) => setCustomFrom(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500 transition-colors"
+                  className="w-full h-10 px-3 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-[11px] text-gray-400 dark:text-slate-500 mb-1 font-medium">End Date</label>
+                <label className="block text-[11px] text-[#60646c] dark:text-slate-500 mb-1 font-medium">End Date</label>
                 <input
                   type="date"
                   value={customTo}
                   onChange={(e) => setCustomTo(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500 transition-colors"
+                  className="w-full h-10 px-3 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
                 />
               </div>
             </div>
@@ -751,7 +751,7 @@ export default function ReportsPage() {
           <div className="md:col-span-2 pt-2 flex justify-end">
             <button
               onClick={() => setFilterOpen(false)}
-              className="px-5 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-xl shadow-xs active:scale-95 transition-all"
+              className="h-10 px-5 bg-[#ff3d00] hover:bg-[#e03600] active:scale-[0.98] text-white text-xs font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
             >
               Done Filtering
             </button>
@@ -760,17 +760,17 @@ export default function ReportsPage() {
       )}
 
       {/* ── Segmented Tab Navigation ── */}
-      <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-gray-200/80 dark:border-slate-700/60 overflow-x-auto scrollbar-hide">
+      <div className="flex items-center gap-1.5 p-1 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg border border-gray-200 dark:border-slate-700/60 overflow-x-auto scrollbar-hide">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 min-w-[90px] py-2 px-3 text-xs font-bold rounded-xl transition-all whitespace-nowrap active:scale-95 ${
+              className={`flex-1 min-w-[90px] h-10 py-2 px-3 text-xs font-medium rounded-lg transition-all whitespace-nowrap active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00] ${
                 isActive
-                  ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-xs'
-                  : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
+                  ? 'bg-white dark:bg-slate-900 text-gray-900 dark:text-white border border-gray-200 dark:border-slate-700'
+                  : 'text-[#60646c] dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
               }`}
             >
               {tab.label}

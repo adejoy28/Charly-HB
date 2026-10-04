@@ -61,7 +61,7 @@ function ToastContainer({ toasts, removeToast }: { toasts: Toast[], removeToast:
         <div
           key={toast.id}
           className={`
-            pointer-events-auto max-w-sm w-full bg-white dark:bg-slate-900 border rounded-2xl shadow-xl p-4
+            pointer-events-auto max-w-sm w-full bg-white dark:bg-slate-900 border rounded-lg shadow-sm p-4
             transform transition-all duration-300 ease-in-out
             ${toast.type === 'success' ? 'border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' : ''}
             ${toast.type === 'error' ? 'border-rose-200 dark:border-rose-900/60 bg-rose-50/90 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' : ''}

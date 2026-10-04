@@ -48,23 +48,23 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex flex-col justify-center items-center px-4 py-12 transition-colors">
       
       {/* Container Box */}
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 dark:shadow-none transition-all">
+      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-6 sm:p-10 transition-all">
         
         {/* Header */}
         <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-orange-500/25">
-            <span className="text-white text-2xl font-black">C</span>
+          <div className="w-12 h-12 bg-[#ff3d00] rounded-lg flex items-center justify-center mb-4">
+            <span className="text-white text-2xl font-medium">C</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl font-medium text-gray-900 dark:text-white tracking-tight">
             Create Account
           </h1>
-          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#60646c] dark:text-slate-400 mt-1">
             Register your warehouse tenant workspace on charlyHB
           </p>
         </div>
 
         {error && (
-          <div className="mb-5 p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400">
+          <div className="mb-5 p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400">
             {error}
           </div>
         )}
@@ -72,14 +72,14 @@ export default function RegisterPage() {
         <div className="space-y-3.5">
           {/* Full Name */}
           <div>
-            <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
               Full Name *
             </label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+              className="w-full h-10 px-4 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] dark:placeholder-slate-500 focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
               placeholder="e.g. John Doe"
               required
             />
@@ -87,14 +87,14 @@ export default function RegisterPage() {
 
           {/* Username */}
           <div>
-            <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
               Username
             </label>
             <input
               type="text"
               value={username}
               onChange={e => setUsername(e.target.value)}
-              className="w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+              className="w-full h-10 px-4 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] dark:placeholder-slate-500 focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
               placeholder="e.g. johndoe"
               autoCapitalize="none"
               autoCorrect="off"
@@ -103,14 +103,14 @@ export default function RegisterPage() {
 
           {/* Email */}
           <div>
-            <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
               Email Address
             </label>
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+              className="w-full h-10 px-4 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] dark:placeholder-slate-500 focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
               placeholder="e.g. john@example.com"
               autoCapitalize="none"
               autoCorrect="off"
@@ -119,21 +119,21 @@ export default function RegisterPage() {
 
           {/* Phone */}
           <div>
-            <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
               Phone Number
             </label>
             <input
               type="tel"
               value={phone}
               onChange={e => setPhone(e.target.value)}
-              className="w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+              className="w-full h-10 px-4 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] dark:placeholder-slate-500 focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
               placeholder="e.g. +234 801 234 5678"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
               Password (min. 6 characters) *
             </label>
             <div className="relative">
@@ -141,13 +141,13 @@ export default function RegisterPage() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full h-11 px-4 pr-12 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+                className="w-full h-10 px-4 pr-12 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] dark:placeholder-slate-500 focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
                 placeholder="Choose a strong password..."
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 active:opacity-70 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#60646c] dark:text-slate-500 hover:text-gray-900 dark:hover:text-slate-300 active:opacity-70 transition-colors"
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
@@ -156,7 +156,7 @@ export default function RegisterPage() {
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
               Confirm Password *
             </label>
             <input
@@ -164,7 +164,7 @@ export default function RegisterPage() {
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-              className="w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+              className="w-full h-10 px-4 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] dark:placeholder-slate-500 focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
               placeholder="Re-type your password..."
             />
           </div>
@@ -174,16 +174,16 @@ export default function RegisterPage() {
             type="button"
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full h-11 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-xl shadow-md shadow-orange-500/20 active:opacity-90 disabled:opacity-50 transition-all mt-4"
+            className="w-full h-10 bg-[#ff3d00] hover:bg-[#e03600] text-white text-sm font-medium rounded-lg active:scale-[0.98] disabled:opacity-50 transition-all mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
           >
             {loading ? 'Creating Tenant...' : 'Create Account'}
           </button>
         </div>
 
         {/* Login link */}
-        <p className="text-center text-xs text-gray-500 dark:text-slate-400 mt-6">
+        <p className="text-center text-xs text-[#60646c] dark:text-slate-400 mt-6">
           Already registered?{' '}
-          <Link href="/login" className="text-orange-500 hover:text-orange-600 font-bold transition-colors">
+          <Link href="/login" className="text-[#ff3d00] hover:underline font-medium transition-colors">
             Sign in to existing account
           </Link>
         </p>

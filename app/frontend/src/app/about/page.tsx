@@ -31,48 +31,48 @@ export default function AboutPage() {
 
       {/* ── App Info ── */}
       <div className="space-y-2">
-        <h3 className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+        <h3 className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
           Platform Architecture
         </h3>
-        <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs transition-colors divide-y divide-gray-100 dark:divide-slate-800">
+        <div className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg overflow-hidden shadow-none transition-colors divide-y divide-neutral-100 dark:divide-slate-800">
           <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">Application</span>
-            <span className="text-xs font-bold text-gray-900 dark:text-white">Charly HB Inventory Engine</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">Application</span>
+            <span className="text-xs font-medium text-gray-900 dark:text-white">Charly HB Inventory Engine</span>
           </div>
           <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">Version</span>
-            <span className="text-xs font-mono font-bold text-orange-500">v2.4.0 (Enterprise)</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">Version</span>
+            <span className="text-xs font-mono font-medium text-[#ff3d00]">v2.4.0 (Enterprise)</span>
           </div>
           <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">Ledger Protocol</span>
-            <span className="text-xs font-mono font-semibold text-emerald-600 dark:text-emerald-400">Real-Time Event Audit</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">Ledger Protocol</span>
+            <span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400">Real-Time Event Audit</span>
           </div>
           <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">PWA Offline Mode</span>
-            <span className="text-xs font-semibold text-gray-700 dark:text-slate-300">Enabled</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">PWA Offline Mode</span>
+            <span className="text-xs font-medium text-gray-700 dark:text-slate-300">Enabled</span>
           </div>
         </div>
       </div>
 
       {/* ── Account Info ── */}
       <div className="space-y-2">
-        <h3 className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+        <h3 className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
           Active Session Identity
         </h3>
-        <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs transition-colors divide-y divide-gray-100 dark:divide-slate-800">
+        <div className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg overflow-hidden shadow-none transition-colors divide-y divide-neutral-100 dark:divide-slate-800">
           <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">Operator Name</span>
-            <span className="text-xs font-bold text-gray-900 dark:text-white truncate ml-3">{user?.name}</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">Operator Name</span>
+            <span className="text-xs font-medium text-gray-900 dark:text-white truncate ml-3">{user?.name}</span>
           </div>
           <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">Identifier</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">Identifier</span>
             <span className="text-xs font-mono text-gray-700 dark:text-slate-300 truncate ml-3">
               {user?.email || user?.username || user?.phone || '—'}
             </span>
           </div>
           <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">Access Scope</span>
-            <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">Full Workspace Read/Write</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">Access Scope</span>
+            <span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400">Full Workspace Read/Write</span>
           </div>
         </div>
       </div>
@@ -81,14 +81,14 @@ export default function AboutPage() {
       <div className="space-y-3 pt-2">
         <Link
           href="/"
-          className="flex items-center justify-center w-full h-11 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold rounded-xl active:scale-95 transition-all shadow-xs"
+          className="flex items-center justify-center w-full h-10 min-h-[40px] bg-white dark:bg-slate-900 border border-neutral-300 dark:border-slate-700 text-gray-900 dark:text-white hover:bg-neutral-50 dark:hover:bg-slate-800 text-sm font-medium rounded-lg active:scale-[0.98] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
         >
           Return to Ledger Dashboard
         </Link>
 
         <button
           onClick={handleLogout}
-          className="w-full h-11 border border-rose-300 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-bold rounded-xl active:scale-95 transition-all"
+          className="w-full h-10 min-h-[40px] border border-[#d92d20] text-[#d92d20] hover:bg-rose-50 dark:hover:bg-rose-950/30 text-sm font-medium rounded-lg active:scale-[0.98] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d92d20]"
         >
           Sign Out of Workspace
         </button>

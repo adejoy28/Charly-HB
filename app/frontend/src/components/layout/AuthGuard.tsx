@@ -32,10 +32,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex items-center justify-center transition-colors">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl flex items-center justify-center animate-pulse shadow-lg shadow-orange-500/20">
-            <span className="text-white text-lg font-bold">C</span>
+          <div className="w-12 h-12 bg-[#ff3d00] rounded-lg flex items-center justify-center animate-pulse shadow-sm">
+            <span className="text-white text-lg font-medium">C</span>
           </div>
-          <p className="text-xs font-semibold text-gray-400 dark:text-slate-500">Loading workspace...</p>
+          <p className="text-xs font-medium text-[#60646c] dark:text-slate-400">Loading workspace...</p>
         </div>
       </div>
     )

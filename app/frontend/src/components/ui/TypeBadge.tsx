@@ -18,8 +18,8 @@ export default function TypeBadge({ type }: TypeBadgeProps) {
       },
       distribution: {
         label: 'Distributed',
-        dot: 'bg-orange-500',
-        classes: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20'
+        dot: 'bg-[#ff3d00]',
+        classes: 'bg-[#ff3d00]/10 text-[#ff3d00] border border-[#ff3d00]/20'
       },
       correction: {
         label: 'Correction',
@@ -35,14 +35,14 @@ export default function TypeBadge({ type }: TypeBadgeProps) {
     return configs[t] || { 
       label: t, 
       dot: 'bg-slate-400',
-      classes: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700' 
+      classes: 'bg-[#f8fafc] dark:bg-slate-800 text-[#60646c] dark:text-slate-300 border border-gray-200 dark:border-slate-700' 
     }
   }
 
   const config = getBadgeConfig(type)
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide ${config.classes}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium tracking-wide ${config.classes}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
       {config.label}
     </span>

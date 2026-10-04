@@ -178,20 +178,20 @@ export default function DistributeModal() {
     <BaseModal isOpen={isOpen} onClose={closeModal} title="Distribute Stock to Shop" size="wide">
 
       {error && (
-        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400">
+        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-lg text-xs font-medium text-rose-700 dark:text-rose-400">
           {error}
         </div>
       )}
 
       {/* Shop selector */}
       <div className="mb-5">
-        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+        <label className="block text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1.5">
           Destination Shop / Branch *
         </label>
         <select
           value={selectedShop}
           onChange={e => handleShopChange(e.target.value)}
-          className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500 transition-colors"
+          className="w-full h-10 min-h-[40px] px-3.5 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
         >
           <option value="">Choose a branch or shop...</option>
           {shops.filter(s => !s.archived).map(s => (
@@ -207,21 +207,21 @@ export default function DistributeModal() {
               type="text"
               value={newShopName}
               onChange={e => setNewShopName(e.target.value)}
-              className="flex-1 rounded-xl border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+              className="flex-1 h-10 min-h-[40px] rounded-lg border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00]"
               placeholder="Enter new shop branch name..."
               autoFocus
             />
             <button
               type="button"
               onClick={handleCreateShop}
-              className="bg-orange-500 text-white text-xs font-bold px-4 rounded-xl active:scale-95 transition-all"
+              className="h-10 min-h-[40px] bg-[#ff3d00] hover:bg-[#e03600] text-white text-xs font-medium px-4 rounded-lg active:scale-[0.98] transition-all"
             >
               Save Shop
             </button>
             <button
               type="button"
               onClick={() => setShowNewShopForm(false)}
-              className="border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 text-xs px-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="h-10 min-h-[40px] border border-neutral-300 dark:border-slate-700 text-[#60646c] dark:text-slate-400 text-xs px-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-slate-800"
             >
               ✕
             </button>
@@ -231,7 +231,7 @@ export default function DistributeModal() {
 
       {/* Product rows */}
       <div className="mb-4">
-        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-2">
           Dispatched Products
         </label>
 
@@ -242,16 +242,16 @@ export default function DistributeModal() {
             const lineTotal = (parseInt(row.qty) || 0) * (parseFloat(row.sellingPrice) || 0)
 
             return (
-              <div key={row.id} className="border border-gray-200/80 dark:border-slate-700/80 rounded-2xl p-3.5 bg-slate-50 dark:bg-slate-800/60 relative transition-colors">
+              <div key={row.id} className="border border-neutral-200 dark:border-slate-700 rounded-lg p-3.5 bg-neutral-50 dark:bg-slate-800/60 relative transition-colors">
 
                 {/* Row Header */}
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
+                  <span className="text-xs font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                     Item #{index + 1}
                   </span>
                   <div className="flex items-center gap-2">
                     {lineTotal > 0 && (
-                      <span className="text-xs font-mono font-bold text-orange-600 dark:text-orange-400">
+                      <span className="text-xs font-mono font-medium text-[#ff3d00]">
                         {formatCurrency(lineTotal)}
                       </span>
                     )}
@@ -259,7 +259,7 @@ export default function DistributeModal() {
                       <button
                         type="button"
                         onClick={() => removeRow(row.id)}
-                        className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-rose-500 text-xs flex items-center justify-center transition-colors"
+                        className="w-5 h-5 rounded-full bg-neutral-200 dark:bg-slate-700 text-neutral-600 dark:text-slate-400 hover:text-[#d92d20] text-xs flex items-center justify-center transition-colors"
                       >
                         ✕
                       </button>
@@ -281,22 +281,22 @@ export default function DistributeModal() {
                     })}
                     onFocus={() => updateRow(row.id, { showSuggestions: true })}
                     onBlur={() => setTimeout(() => updateRow(row.id, { showSuggestions: false }), 200)}
-                    className="w-full px-3.5 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
+                    className="w-full h-10 min-h-[40px] px-3.5 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm text-gray-900 dark:text-white placeholder-[#60646c] focus:outline-none focus:border-[#ff3d00] transition-colors"
                     placeholder="Search product by name or SKU..."
                   />
 
                   {/* Suggestions Dropdown */}
                   {row.showSuggestions && suggestions.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl mt-1 max-h-44 overflow-y-auto divide-y divide-gray-100 dark:divide-slate-800">
+                    <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700 rounded-lg shadow-sm mt-1 max-h-44 overflow-y-auto divide-y divide-neutral-100 dark:divide-slate-800">
                       {suggestions.map(product => (
                         <button
                           key={product.id}
                           type="button"
                           onMouseDown={() => selectProduct(row.id, product)}
-                          className="w-full text-left px-3.5 py-2.5 hover:bg-orange-50/60 dark:hover:bg-orange-950/30 transition-colors"
+                          className="w-full text-left px-3.5 py-2.5 hover:bg-neutral-50 dark:hover:bg-slate-800/60 transition-colors"
                         >
-                          <p className="text-xs font-semibold text-gray-900 dark:text-white">{product.name}</p>
-                          <p className="text-[11px] text-gray-400 dark:text-slate-400 font-mono">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white">{product.name}</p>
+                          <p className="text-xs text-[#60646c] dark:text-slate-400 font-mono">
                             {product.sku_code} · {formatNumber(product.balance)} in stock
                             {product.cost_price > 0 && ` · Cost: ${formatCurrency(product.cost_price)}`}
                           </p>
@@ -306,7 +306,7 @@ export default function DistributeModal() {
                   )}
 
                   {row.showSuggestions && row.search && suggestions.length === 0 && (
-                    <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl mt-1 px-3.5 py-3 text-xs text-gray-400 dark:text-slate-500">
+                    <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-700 rounded-lg shadow-sm mt-1 px-3.5 py-3 text-xs text-[#60646c] dark:text-slate-400">
                       No matching products available in stock
                     </div>
                   )}
@@ -314,9 +314,9 @@ export default function DistributeModal() {
 
                 {/* Quantity & Price */}
                 {row.productId && (
-                  <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-slate-700/60">
+                  <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-neutral-200/80 dark:border-slate-700/60">
                     <div>
-                      <label className="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500 mb-1">
+                      <label className="block text-[11px] font-medium uppercase tracking-wider text-[#60646c] dark:text-slate-400 mb-1">
                         Quantity ({selectedProduct ? `max ${formatNumber(selectedProduct.balance)}` : 'units'})
                       </label>
                       <input
@@ -328,12 +328,12 @@ export default function DistributeModal() {
                         inputMode="numeric"
                         value={row.qty}
                         onChange={e => updateRow(row.id, { qty: e.target.value })}
-                        className="w-full px-3 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-xs font-mono font-bold text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                        className="w-full h-10 px-3 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm font-mono font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00]"
                         placeholder="0"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500 mb-1">
+                      <label className="block text-[11px] font-medium uppercase tracking-wider text-[#60646c] dark:text-slate-400 mb-1">
                         Dispatch Price (₦)
                       </label>
                       <input
@@ -343,7 +343,7 @@ export default function DistributeModal() {
                         inputMode="numeric"
                         value={row.sellingPrice}
                         onChange={e => updateRow(row.id, { sellingPrice: e.target.value })}
-                        className="w-full px-3 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-xs font-mono text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                        className="w-full h-10 px-3 border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm font-mono font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00]"
                         placeholder={selectedProduct?.cost_price?.toString() || '0'}
                       />
                     </div>
@@ -360,21 +360,21 @@ export default function DistributeModal() {
         <button
           type="button"
           onClick={addRow}
-          className="w-full h-10 border-2 border-dashed border-orange-300 dark:border-orange-500/40 text-orange-600 dark:text-orange-400 text-xs font-bold rounded-xl hover:bg-orange-50/50 dark:hover:bg-orange-950/20 active:scale-99 mb-4 flex items-center justify-center gap-1.5 transition-all"
+          className="w-full h-10 min-h-[40px] border border-neutral-300 dark:border-slate-700 hover:border-neutral-400 text-gray-900 dark:text-white text-sm font-medium rounded-lg hover:bg-neutral-50 dark:hover:bg-slate-800 active:scale-[0.98] mb-4 flex items-center justify-center gap-1.5 transition-all"
         >
           <span>+ Add Another Product</span>
         </button>
       )}
 
       {/* Footer */}
-      <div className="border-t border-gray-100 dark:border-slate-800 pt-4 space-y-2.5">
+      <div className="border-t border-neutral-200 dark:border-slate-800 pt-4 space-y-2.5">
         {totalCartons > 0 && (
           <div className="flex justify-between items-center py-1">
-            <span className="text-xs font-medium text-gray-500 dark:text-slate-400">Total Dispatch Volume</span>
+            <span className="text-xs font-medium text-[#60646c] dark:text-slate-400">Total Dispatch Volume</span>
             <div className="text-right">
-              <span className="text-base font-bold text-orange-600 dark:text-orange-400 font-mono">{formatNumber(totalCartons)} units</span>
+              <span className="text-base font-medium text-[#ff3d00] font-mono">{formatNumber(totalCartons)} units</span>
               {totalValue > 0 && (
-                <p className="text-xs font-mono font-semibold text-gray-500 dark:text-slate-400">{formatCurrency(totalValue)}</p>
+                <p className="text-xs font-mono font-medium text-[#60646c] dark:text-slate-400">{formatCurrency(totalValue)}</p>
               )}
             </div>
           </div>
@@ -384,14 +384,14 @@ export default function DistributeModal() {
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full h-11 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95 disabled:opacity-50"
+          className="w-full h-10 min-h-[40px] bg-[#ff3d00] hover:bg-[#e03600] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
         >
           {loading ? 'Processing Dispatch...' : 'Confirm Stock Distribution'}
         </button>
         <button
           type="button"
           onClick={closeModal}
-          className="w-full h-10 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          className="w-full h-10 min-h-[40px] border border-neutral-300 dark:border-slate-700 text-gray-900 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-neutral-50 dark:hover:bg-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
         >
           Cancel
         </button>

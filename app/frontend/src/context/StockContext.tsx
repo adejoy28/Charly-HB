@@ -179,6 +179,8 @@ export function StockProvider({ children }: StockProviderProps) {
   useEffect(() => {
     if (isAuthenticated) {
       refreshAllData()
+    } else {
+      setLoading(false)
     }
   }, [isAuthenticated])
 

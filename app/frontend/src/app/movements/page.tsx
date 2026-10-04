@@ -162,14 +162,14 @@ export default function MovementsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-gray-900 dark:text-white">
               Stock Movement Ledger
             </h1>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold border border-slate-200 dark:border-slate-700 font-mono">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#f8fafc] dark:bg-slate-800 text-[#60646c] dark:text-slate-300 font-medium border border-gray-200 dark:border-slate-700 font-mono">
               {filteredMovements.length} records
             </span>
           </div>
-          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#60646c] dark:text-slate-400 mt-1">
             Immutable transaction log of opening balances, receipts, shop dispatches, and spoil loss.
           </p>
         </div>
@@ -179,15 +179,15 @@ export default function MovementsPage() {
             onClick={() => fetchMovements(1)}
             disabled={loading}
             title="Refresh movements"
-            className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-gray-200 dark:border-slate-700"
+            className="h-10 w-10 flex items-center justify-center text-[#60646c] dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-gray-200 dark:border-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
           >
-            <RefreshCwIcon size={15} className={loading ? 'animate-spin text-orange-500' : ''} />
+            <RefreshCwIcon size={15} className={loading ? 'animate-spin text-[#ff3d00]' : ''} />
           </button>
 
           <button
             onClick={handleExport}
             disabled={filteredMovements.length === 0}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 border border-gray-200 dark:border-slate-700 transition-colors disabled:opacity-50"
+            className="h-10 inline-flex items-center gap-1.5 px-3.5 text-xs font-medium rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-gray-900 dark:text-white border border-gray-200 dark:border-slate-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00]"
           >
             <DownloadIcon size={14} />
             <span>Export CSV</span>
@@ -195,16 +195,16 @@ export default function MovementsPage() {
 
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border transition-all ${
+            className={`h-10 inline-flex items-center gap-1.5 px-3.5 text-xs font-medium rounded-lg border transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff3d00] ${
               activeFilterCount > 0
-                ? 'border-orange-500 bg-orange-500/10 text-orange-600 dark:text-orange-400'
-                : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                ? 'border-[#ff3d00] bg-[#ff3d00]/10 text-[#ff3d00]'
+                : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             <FilterIcon size={14} />
             <span>Filter Parameters</span>
             {activeFilterCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-orange-500 text-white text-[10px] font-bold flex items-center justify-center">
+              <span className="w-4 h-4 rounded-full bg-[#ff3d00] text-white text-[10px] font-medium flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -214,15 +214,15 @@ export default function MovementsPage() {
 
       {/* ── Search & Filter Drawer ── */}
       {filtersOpen && (
-        <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 animate-in fade-in">
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg p-5 space-y-4 animate-in fade-in">
           <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-slate-800">
-            <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+            <h3 className="text-xs font-medium text-gray-900 dark:text-white uppercase tracking-wider">
               Filter Transaction Records
             </h3>
             {activeFilterCount > 0 && (
               <button
                 onClick={clearFilters}
-                className="text-xs text-orange-500 hover:underline font-semibold"
+                className="text-xs text-[#ff3d00] hover:underline font-medium"
               >
                 Reset All Filters
               </button>
@@ -232,13 +232,13 @@ export default function MovementsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
             {/* Type */}
             <div>
-              <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
                 Movement Type
               </label>
               <select
                 value={filters.type}
                 onChange={(e) => handleFilterChange('type', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                className="w-full h-10 px-3 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00]"
               >
                 <option value="all">All Movement Types</option>
                 <option value="opening">Opening Stock</option>
@@ -251,13 +251,13 @@ export default function MovementsPage() {
 
             {/* Product */}
             <div>
-              <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
                 Filter by Product
               </label>
               <select
                 value={filters.product_id}
                 onChange={(e) => handleFilterChange('product_id', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                className="w-full h-10 px-3 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00]"
               >
                 <option value="">All Catalog Products</option>
                 {products.map((p) => (
@@ -270,13 +270,13 @@ export default function MovementsPage() {
 
             {/* Shop */}
             <div>
-              <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
                 Filter by Shop / Branch
               </label>
               <select
                 value={filters.shop_id}
                 onChange={(e) => handleFilterChange('shop_id', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                className="w-full h-10 px-3 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00]"
               >
                 <option value="">All Destination Shops</option>
                 {shops.filter(s => !s.archived).map((s) => (
@@ -288,25 +288,25 @@ export default function MovementsPage() {
             {/* Date range */}
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
                   Start Date
                 </label>
                 <input
                   type="date"
                   value={filters.from}
                   onChange={(e) => handleFilterChange('from', e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                  className="w-full h-10 px-2.5 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00]"
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider mb-1">
                   End Date
                 </label>
                 <input
                   type="date"
                   value={filters.to}
                   onChange={(e) => handleFilterChange('to', e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                  className="w-full h-10 px-2.5 border border-gray-200 dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00]"
                 />
               </div>
             </div>
@@ -315,23 +315,23 @@ export default function MovementsPage() {
       )}
 
       {/* ── Movements Table & Search Toolbar ── */}
-      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg overflow-hidden">
         
         {/* Search Header */}
         <div className="p-4 sm:p-5 border-b border-gray-100 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="relative flex-1 max-w-md">
-            <SearchIcon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
+            <SearchIcon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#60646c] dark:text-slate-500" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by product, shop, operator or note..."
-              className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors"
+              className="w-full h-10 pl-9 pr-4 text-xs bg-[#f8fafc] dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-lg text-gray-900 dark:text-white placeholder-[#60646c] dark:placeholder-slate-500 focus:outline-none focus:border-[#ff3d00] focus:ring-1 focus:ring-[#ff3d00] transition-colors"
             />
           </div>
 
-          <div className="text-xs text-gray-500 dark:text-slate-400 font-medium">
-            Showing <strong>{filteredMovements.length}</strong> movements
+          <div className="text-xs text-[#60646c] dark:text-slate-400 font-medium">
+            Showing <strong className="text-gray-900 dark:text-white font-medium">{filteredMovements.length}</strong> movements
           </div>
         </div>
 
@@ -355,7 +355,7 @@ export default function MovementsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                <tr className="border-b border-gray-200 dark:border-slate-800 bg-[#f8fafc] dark:bg-slate-800/40 text-[11px] font-medium text-[#60646c] dark:text-slate-400 uppercase tracking-wider">
                   <th className="py-3 px-4 sm:px-6">Timestamp</th>
                   <th className="py-3 px-4">Operator</th>
                   <th className="py-3 px-4">Product & SKU</th>
@@ -376,10 +376,10 @@ export default function MovementsPage() {
                     >
                       {/* Timestamp */}
                       <td className="py-3.5 px-4 sm:px-6 whitespace-nowrap">
-                        <div className="font-semibold text-gray-900 dark:text-slate-200">
+                        <div className="font-medium text-gray-900 dark:text-slate-200">
                           {formatDate(m.recorded_at)}
                         </div>
-                        <div className="text-[10px] text-gray-400 dark:text-slate-500 font-mono">
+                        <div className="text-[10px] text-[#60646c] dark:text-slate-500 font-mono">
                           {formatTime(m.recorded_at)}
                         </div>
                       </td>
@@ -393,10 +393,10 @@ export default function MovementsPage() {
 
                       {/* Product */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
-                        <div className="font-semibold text-gray-900 dark:text-slate-100 truncate max-w-[200px]">
+                        <div className="font-medium text-gray-900 dark:text-slate-100 truncate max-w-[200px]">
                           {m.product?.name || 'Unknown'}
                         </div>
-                        <div className="font-mono text-[10px] text-gray-400 dark:text-slate-500">
+                        <div className="font-mono text-[10px] text-[#60646c] dark:text-slate-500">
                           {m.product?.sku_code || '—'}
                         </div>
                       </td>
@@ -407,7 +407,7 @@ export default function MovementsPage() {
                       </td>
 
                       {/* Quantity */}
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-mono font-bold text-sm">
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-mono font-medium text-sm">
                         <span className={isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>
                           {isPositive ? '+' : ''}{formatNumber(m.qty)}
                         </span>
@@ -420,7 +420,7 @@ export default function MovementsPage() {
                             {formatCurrency(m.selling_price * Math.abs(m.qty))}
                           </div>
                         ) : (
-                          <span className="text-gray-400 dark:text-slate-600">—</span>
+                          <span className="text-[#60646c] dark:text-slate-600">—</span>
                         )}
                       </td>
 
@@ -434,17 +434,17 @@ export default function MovementsPage() {
                       {/* Status */}
                       <td className="py-3.5 px-4 sm:px-6 text-center whitespace-nowrap">
                         {m.status === 'confirmed' && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                             Confirmed
                           </span>
                         )}
                         {m.status === 'pending' && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                             Pending Review
                           </span>
                         )}
                         {m.status === 'rejected' && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                             Rejected
                           </span>
                         )}

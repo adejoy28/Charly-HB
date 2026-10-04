@@ -10,23 +10,23 @@ export default function LoadingSkeleton({ type = 'card', rows = 3 }: LoadingSkel
   if (type === 'dashboard') {
     return (
       <div className="px-4 py-4 space-y-6 pb-20">
-        <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-4 animate-pulse">
+        <div className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg p-4 animate-pulse">
           <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded w-1/4 mb-4"></div>
           <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded w-1/2"></div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-4 animate-pulse">
+            <div key={i} className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg p-4 animate-pulse">
               <div className="h-8 bg-gray-200 dark:bg-slate-800 rounded mb-2"></div>
               <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded"></div>
             </div>
           ))}
         </div>
-        <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-4 animate-pulse">
+        <div className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg p-4 animate-pulse">
           <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded w-1/4 mb-4"></div>
           <div className="grid grid-cols-2 gap-3">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-100 dark:bg-slate-800/60 rounded-xl"></div>
+              <div key={i} className="h-10 bg-gray-100 dark:bg-slate-800/60 rounded-lg"></div>
             ))}
           </div>
         </div>
@@ -36,13 +36,13 @@ export default function LoadingSkeleton({ type = 'card', rows = 3 }: LoadingSkel
 
   if (type === 'table') {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl overflow-hidden animate-pulse">
-        <div className="px-4 py-4 border-b border-gray-200/80 dark:border-slate-800">
+      <div className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg overflow-hidden animate-pulse">
+        <div className="px-4 py-4 border-b border-neutral-200 dark:border-slate-800">
           <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded w-1/4"></div>
         </div>
         <div className="p-4 space-y-2">
           {[...Array(rows)].map((_, i) => (
-            <div key={i} className="h-12 bg-gray-100 dark:bg-slate-800/60 rounded-xl"></div>
+            <div key={i} className="h-10 bg-gray-100 dark:bg-slate-800/60 rounded-lg"></div>
           ))}
         </div>
       </div>
@@ -53,7 +53,7 @@ export default function LoadingSkeleton({ type = 'card', rows = 3 }: LoadingSkel
     return (
       <div className="space-y-4">
         {[...Array(rows)].map((_, i) => (
-          <div key={i} className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-4 animate-pulse">
+          <div key={i} className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg p-4 animate-pulse">
             <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded w-1/4 mb-2"></div>
             <div className="h-3 bg-gray-200 dark:bg-slate-800 rounded w-1/2"></div>
           </div>
@@ -66,7 +66,7 @@ export default function LoadingSkeleton({ type = 'card', rows = 3 }: LoadingSkel
   return (
     <div className="space-y-4">
       {[...Array(rows)].map((_, i) => (
-        <div key={i} className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-6 animate-pulse">
+        <div key={i} className="bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 rounded-lg p-6 animate-pulse">
           <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded w-1/3 mb-4"></div>
           <div className="space-y-2">
             <div className="h-3 bg-gray-200 dark:bg-slate-800 rounded"></div>
