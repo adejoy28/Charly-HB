@@ -30,12 +30,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   // Show loading screen while auth state is being read from localStorage
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex items-center justify-center transition-colors">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center animate-pulse">
+          <div className="w-12 h-12 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl flex items-center justify-center animate-pulse shadow-lg shadow-orange-500/20">
             <span className="text-white text-lg font-bold">C</span>
           </div>
-          <p className="text-sm text-gray-400">Loading...</p>
+          <p className="text-xs font-semibold text-gray-400 dark:text-slate-500">Loading workspace...</p>
         </div>
       </div>
     )

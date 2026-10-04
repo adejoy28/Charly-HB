@@ -41,14 +41,14 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/40 z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 animate-in fade-in duration-200"
             onClick={() => setIsOpen(false)}
           />
           
           {/* Action Sheet */}
-          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl">
+          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 rounded-t-3xl transition-colors duration-150 animate-in slide-in-from-bottom duration-200">
             {/* Drag handle */}
-            <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-4"></div>
+            <div className="w-10 h-1 bg-gray-300 dark:bg-slate-700 rounded-full mx-auto mt-3 mb-3"></div>
             
             {/* Action List */}
             <div className="pb-6">
@@ -56,8 +56,8 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
                 <button
                   key={action.id}
                   onClick={() => handleAction(action.id)}
-                  className={`flex items-center gap-3 px-4 py-4 text-sm text-gray-700 active:opacity-70 w-full text-left ${
-                    index < actions.length - 1 ? 'border-b border-gray-100' : ''
+                  className={`flex items-center gap-3.5 px-5 py-3.5 text-sm font-semibold text-gray-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50 active:opacity-70 w-full text-left transition-colors ${
+                    index < actions.length - 1 ? 'border-b border-gray-100 dark:border-slate-800/60' : ''
                   }`}
                 >
                   <span className="text-xl">{getActionIcon(action.id)}</span>
@@ -68,7 +68,7 @@ export default function QuickActions({ onAction }: QuickActionsProps) {
               {/* Cancel Button */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="flex items-center justify-center px-4 py-4 text-sm text-gray-500 active:opacity-70 w-full border-t border-gray-100 mt-2"
+                className="flex items-center justify-center px-4 py-3.5 text-sm font-semibold text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 active:opacity-70 w-full border-t border-gray-100 dark:border-slate-800 mt-2 transition-colors"
               >
                 Cancel
               </button>

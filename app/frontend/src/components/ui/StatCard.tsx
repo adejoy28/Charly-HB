@@ -1,6 +1,4 @@
-// StatCard.tsx — A single summary stat card following design checklist
-// Props: label (string), value (number), color ('gray' | 'green' | 'orange' | 'red')
-
+// StatCard.tsx — Enterprise summary stat card with semantic accents & Dark/Light mode support
 interface StatCardProps {
   label: string
   value: number
@@ -8,22 +6,24 @@ interface StatCardProps {
 }
 
 export default function StatCard({ label, value, color = 'gray' }: StatCardProps) {
-  const getColorClasses = (color: 'gray' | 'green' | 'orange' | 'red') => {
-    const colors: Record<'gray' | 'green' | 'orange' | 'red', string> = {
-      gray: 'text-gray-900',
-      green: 'text-green-600',
-      orange: 'text-orange-500',
-      red: 'text-red-500'
+  const getColorClasses = (c: 'gray' | 'green' | 'orange' | 'red') => {
+    const colors = {
+      gray: 'text-gray-900 dark:text-white',
+      green: 'text-emerald-600 dark:text-emerald-400',
+      orange: 'text-orange-500 dark:text-orange-400',
+      red: 'text-rose-500 dark:text-rose-400'
     }
-    return colors[color]
+    return colors[c]
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-4">
-      <div className={`text-2xl font-bold ${getColorClasses(color)}`}>
-        {value}
+    <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs transition-colors">
+      <div className={`text-2xl sm:text-3xl font-extrabold font-mono tracking-tight ${getColorClasses(color)}`}>
+        {value.toLocaleString()}
       </div>
-      <div className="text-sm text-gray-600">{label}</div>
+      <div className="text-xs font-semibold text-gray-500 dark:text-slate-400 mt-1 uppercase tracking-wider">
+        {label}
+      </div>
     </div>
   )
 }

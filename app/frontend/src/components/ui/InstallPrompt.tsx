@@ -45,29 +45,29 @@ export default function InstallPrompt() {
   if (!showBanner) return null
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-800 px-4 py-3 flex items-center gap-3 shadow-md transition-colors">
       {/* App icon */}
-      <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
-        <span className="text-white text-sm font-bold">CHB</span>
+      <div className="w-10 h-10 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-xl flex items-center justify-center shrink-0 shadow-sm shadow-orange-500/20">
+        <span className="text-white text-xs font-black">CHB</span>
       </div>
 
       {/* Text */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-gray-900">Install Charly HB</p>
-        <p className="text-xs text-gray-400">Add to home screen for quick access</p>
+        <p className="text-sm font-bold text-gray-900 dark:text-white">Install Charly HB</p>
+        <p className="text-xs text-gray-500 dark:text-slate-400">Add to home screen for quick offline access</p>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={handleDismiss}
-          className="text-xs text-gray-400 px-2 py-1 active:opacity-70"
+          className="text-xs font-medium text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 px-2 py-1 active:opacity-70 transition-colors"
         >
           Not now
         </button>
         <button
           onClick={handleInstall}
-          className="text-xs font-semibold text-white bg-orange-500 px-3 py-1.5 rounded-xl active:opacity-70"
+          className="text-xs font-bold text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-3.5 py-1.5 rounded-xl shadow-xs active:scale-95 transition-all"
         >
           Install
         </button>
