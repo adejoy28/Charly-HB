@@ -9,7 +9,7 @@ import { formatCurrency, formatNumber } from '@/lib/helpers'
 import type { Product } from '@/types'
 
 interface DistributionRow {
-  id: string           // unique row id
+  id: string
   productId: string
   qty: string
   sellingPrice: string
@@ -75,7 +75,6 @@ export default function DistributeModal() {
       sellingPrice: product.cost_price > 0 ? product.cost_price.toString() : '',
       showSuggestions: false,
     })
-    // Focus qty input after selecting product
     setTimeout(() => {
       const el = document.getElementById(`qty-${rowId}`)
       if (el) el.focus()
@@ -116,8 +115,8 @@ export default function DistributeModal() {
       setSelectedShop(newShop.id.toString())
       setShowNewShopForm(false)
       setNewShopName('')
-    } catch (error) {
-      const apiError = ApiErrorHandler.handleError(error)
+    } catch (err) {
+      const apiError = ApiErrorHandler.handleError(err)
       setError(apiError.message)
     }
   }
@@ -126,7 +125,7 @@ export default function DistributeModal() {
     setError('')
 
     if (!selectedShop) {
-      setError('Please select a shop')
+      setError('Please select a destination shop')
       return
     }
 
@@ -136,7 +135,6 @@ export default function DistributeModal() {
       return
     }
 
-    // Check for incomplete rows
     const incompleteRow = rows.find(r => r.productId && !parseInt(r.qty))
     if (incompleteRow) {
       setError('Enter a quantity for all added products')
@@ -166,8 +164,8 @@ export default function DistributeModal() {
       closeModal()
       refreshProducts()
       refreshShops()
-    } catch (error) {
-      const apiError = ApiErrorHandler.handleError(error)
+    } catch (err) {
+      const apiError = ApiErrorHandler.handleError(err)
       setError(apiError.message)
     } finally {
       setLoading(false)
@@ -177,54 +175,53 @@ export default function DistributeModal() {
   if (!isOpen) return null
 
   return (
-    <BaseModal isOpen={isOpen} onClose={closeModal} title="Distribute to Shop" size="wide">
+    <BaseModal isOpen={isOpen} onClose={closeModal} title="Distribute Stock to Shop" size="wide">
 
-      {/* Error */}
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-500">
+        <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400">
           {error}
         </div>
       )}
 
       {/* Shop selector */}
       <div className="mb-5">
-        <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">
-          Shop
+        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+          Destination Shop / Branch *
         </label>
         <select
           value={selectedShop}
           onChange={e => handleShopChange(e.target.value)}
-          className="w-full px-3 py-3 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+          className="w-full px-3.5 py-2.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500 transition-colors"
         >
-          <option value="">Choose a shop...</option>
+          <option value="">Choose a branch or shop...</option>
           {shops.filter(s => !s.archived).map(s => (
             <option key={s.id} value={s.id}>{s.name}</option>
           ))}
-          <option value="new">+ Add new shop</option>
+          <option value="new">+ Register New Destination Shop</option>
         </select>
 
         {/* Inline new shop form */}
         {showNewShopForm && (
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2.5 flex gap-2 animate-in fade-in">
             <input
               type="text"
               value={newShopName}
               onChange={e => setNewShopName(e.target.value)}
-              className="flex-1 rounded-xl border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:border-orange-500"
-              placeholder="Shop name..."
+              className="flex-1 rounded-xl border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+              placeholder="Enter new shop branch name..."
               autoFocus
             />
             <button
               type="button"
               onClick={handleCreateShop}
-              className="bg-orange-500 text-white text-xs font-semibold px-4 rounded-xl active:opacity-70"
+              className="bg-orange-500 text-white text-xs font-bold px-4 rounded-xl active:scale-95 transition-all"
             >
-              Add
+              Save Shop
             </button>
             <button
               type="button"
               onClick={() => setShowNewShopForm(false)}
-              className="border border-gray-200 text-gray-500 text-xs px-3 rounded-xl active:opacity-70"
+              className="border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 text-xs px-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               ✕
             </button>
@@ -233,9 +230,9 @@ export default function DistributeModal() {
       </div>
 
       {/* Product rows */}
-      <div className="mb-3">
-        <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-          Products
+      <div className="mb-4">
+        <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+          Dispatched Products
         </label>
 
         <div className="space-y-3">
@@ -245,16 +242,16 @@ export default function DistributeModal() {
             const lineTotal = (parseInt(row.qty) || 0) * (parseFloat(row.sellingPrice) || 0)
 
             return (
-              <div key={row.id} className="border border-gray-200 rounded-xl p-3 bg-gray-50 relative">
+              <div key={row.id} className="border border-gray-200/80 dark:border-slate-700/80 rounded-2xl p-3.5 bg-slate-50 dark:bg-slate-800/60 relative transition-colors">
 
-                {/* Row number + remove button */}
+                {/* Row Header */}
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-gray-400">
-                    Product {index + 1}
+                  <span className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
+                    Item #{index + 1}
                   </span>
                   <div className="flex items-center gap-2">
                     {lineTotal > 0 && (
-                      <span className="text-xs font-semibold text-orange-500">
+                      <span className="text-xs font-mono font-bold text-orange-600 dark:text-orange-400">
                         {formatCurrency(lineTotal)}
                       </span>
                     )}
@@ -262,7 +259,7 @@ export default function DistributeModal() {
                       <button
                         type="button"
                         onClick={() => removeRow(row.id)}
-                        className="w-5 h-5 rounded-full bg-gray-200 text-gray-500 text-xs flex items-center justify-center active:opacity-70"
+                        className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-rose-500 text-xs flex items-center justify-center transition-colors"
                       >
                         ✕
                       </button>
@@ -270,7 +267,7 @@ export default function DistributeModal() {
                   </div>
                 </div>
 
-                {/* Product search input */}
+                {/* Product Search Input */}
                 <div className="relative mb-2">
                   <input
                     ref={el => { searchRefs.current[row.id] = el }}
@@ -283,44 +280,45 @@ export default function DistributeModal() {
                       showSuggestions: true,
                     })}
                     onFocus={() => updateRow(row.id, { showSuggestions: true })}
-                    onBlur={() => setTimeout(() => updateRow(row.id, { showSuggestions: false }), 150)}
-                    className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500"
+                    onBlur={() => setTimeout(() => updateRow(row.id, { showSuggestions: false }), 200)}
+                    className="w-full px-3.5 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:border-orange-500 transition-colors"
                     placeholder="Search product by name or SKU..."
                   />
 
-                  {/* Suggestions dropdown */}
+                  {/* Suggestions Dropdown */}
                   {row.showSuggestions && suggestions.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-lg mt-1 max-h-44 overflow-y-auto">
+                    <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl mt-1 max-h-44 overflow-y-auto divide-y divide-gray-100 dark:divide-slate-800">
                       {suggestions.map(product => (
                         <button
                           key={product.id}
                           type="button"
                           onMouseDown={() => selectProduct(row.id, product)}
-                          className="w-full text-left px-3 py-2.5 hover:bg-orange-50 active:bg-orange-100 border-b border-gray-50 last:border-0"
+                          className="w-full text-left px-3.5 py-2.5 hover:bg-orange-50/60 dark:hover:bg-orange-950/30 transition-colors"
                         >
-                          <p className="text-sm font-medium text-gray-900">{product.name}</p>
-                          <p className="text-xs text-gray-400">
-                            {product.sku_code} · {formatNumber(product.balance)} available
-                            {product.cost_price > 0 && ` · ${formatCurrency(product.cost_price)}`}
+                          <p className="text-xs font-semibold text-gray-900 dark:text-white">{product.name}</p>
+                          <p className="text-[11px] text-gray-400 dark:text-slate-400 font-mono">
+                            {product.sku_code} · {formatNumber(product.balance)} in stock
+                            {product.cost_price > 0 && ` · Cost: ${formatCurrency(product.cost_price)}`}
                           </p>
                         </button>
                       ))}
                     </div>
                   )}
 
-                  {/* No results */}
                   {row.showSuggestions && row.search && suggestions.length === 0 && (
-                    <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-lg mt-1 px-3 py-3">
-                      <p className="text-xs text-gray-400">No products found</p>
+                    <div className="absolute top-full left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl shadow-xl mt-1 px-3.5 py-3 text-xs text-gray-400 dark:text-slate-500">
+                      No matching products available in stock
                     </div>
                   )}
                 </div>
 
-                {/* Qty + Selling price — only show after product selected */}
+                {/* Quantity & Price */}
                 {row.productId && (
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-slate-700/60">
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1">Qty (cartons)</label>
+                      <label className="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500 mb-1">
+                        Quantity ({selectedProduct ? `max ${formatNumber(selectedProduct.balance)}` : 'units'})
+                      </label>
                       <input
                         id={`qty-${row.id}`}
                         type="number"
@@ -330,17 +328,14 @@ export default function DistributeModal() {
                         inputMode="numeric"
                         value={row.qty}
                         onChange={e => updateRow(row.id, { qty: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+                        className="w-full px-3 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-xs font-mono font-bold text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
                         placeholder="0"
                       />
-                      {selectedProduct && (
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          max {formatNumber(selectedProduct.balance)}
-                        </p>
-                      )}
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1">Selling price (₦)</label>
+                      <label className="block text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500 mb-1">
+                        Dispatch Price (₦)
+                      </label>
                       <input
                         type="number"
                         step="1"
@@ -348,7 +343,7 @@ export default function DistributeModal() {
                         inputMode="numeric"
                         value={row.sellingPrice}
                         onChange={e => updateRow(row.id, { sellingPrice: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-lg text-sm text-gray-900 focus:outline-none focus:border-orange-500"
+                        className="w-full px-3 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-xs font-mono text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
                         placeholder={selectedProduct?.cost_price?.toString() || '0'}
                       />
                     </div>
@@ -360,29 +355,26 @@ export default function DistributeModal() {
         </div>
       </div>
 
-      {/* Add product button */}
+      {/* Add Product Button */}
       {availableProducts.length > usedProductIds.length && (
         <button
           type="button"
           onClick={addRow}
-          className="w-full h-10 border-2 border-dashed border-orange-300 text-orange-500 text-sm font-medium rounded-xl active:opacity-70 mb-5 flex items-center justify-center gap-2"
+          className="w-full h-10 border-2 border-dashed border-orange-300 dark:border-orange-500/40 text-orange-600 dark:text-orange-400 text-xs font-bold rounded-xl hover:bg-orange-50/50 dark:hover:bg-orange-950/20 active:scale-99 mb-4 flex items-center justify-center gap-1.5 transition-all"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-          </svg>
-          Add Product
+          <span>+ Add Another Product</span>
         </button>
       )}
 
-      {/* Footer totals + submit */}
-      <div className="border-t border-gray-100 pt-4 space-y-3">
+      {/* Footer */}
+      <div className="border-t border-gray-100 dark:border-slate-800 pt-4 space-y-2.5">
         {totalCartons > 0 && (
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">Total</span>
+          <div className="flex justify-between items-center py-1">
+            <span className="text-xs font-medium text-gray-500 dark:text-slate-400">Total Dispatch Volume</span>
             <div className="text-right">
-              <span className="text-lg font-bold text-gray-900">{formatNumber(totalCartons)} cartons</span>
+              <span className="text-base font-bold text-orange-600 dark:text-orange-400 font-mono">{formatNumber(totalCartons)} units</span>
               {totalValue > 0 && (
-                <p className="text-sm font-semibold text-orange-500">{formatCurrency(totalValue)}</p>
+                <p className="text-xs font-mono font-semibold text-gray-500 dark:text-slate-400">{formatCurrency(totalValue)}</p>
               )}
             </div>
           </div>
@@ -392,14 +384,14 @@ export default function DistributeModal() {
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full h-12 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70 disabled:opacity-40"
+          className="w-full h-11 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95 disabled:opacity-50"
         >
-          {loading ? 'Recording...' : 'Record Distribution'}
+          {loading ? 'Processing Dispatch...' : 'Confirm Stock Distribution'}
         </button>
         <button
           type="button"
           onClick={closeModal}
-          className="w-full h-12 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl active:opacity-70"
+          className="w-full h-10 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
         >
           Cancel
         </button>

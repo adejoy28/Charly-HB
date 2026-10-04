@@ -140,35 +140,35 @@ export default function Home() {
     <div className="space-y-6 pb-12 animate-in fade-in duration-300">
       
       {/* ── Executive Hero Banner ── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900 text-white p-6 sm:p-8 shadow-xl border border-slate-700/50">
-        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-gray-900 dark:text-white p-6 sm:p-8 shadow-xs border border-gray-200/90 dark:border-slate-800 transition-colors">
+        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-orange-500/5 dark:bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 text-xs font-semibold uppercase tracking-wider mb-3 border border-orange-500/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 text-xs font-semibold uppercase tracking-wider mb-3 border border-orange-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-500 dark:bg-orange-400 animate-pulse" />
               Warehouse Live Terminal
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
               Inventory & Distribution Hub
             </h2>
-            <p className="text-sm text-slate-300 mt-1 max-w-xl">
+            <p className="text-sm text-gray-500 dark:text-slate-300 mt-1 max-w-xl">
               Real-time stock flow, ledger reconciliation, and multi-tenant warehouse visibility.
             </p>
           </div>
 
           {/* Quick Metrics Badge Strip */}
           <div className="flex flex-wrap items-center gap-3">
-            <div className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-3 rounded-xl border border-slate-700/60">
-              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider block">Catalog SKUs</span>
-              <span className="text-xl font-bold text-white font-mono">{products.length}</span>
+            <div className="bg-slate-50 dark:bg-slate-800/80 px-4 py-3 rounded-xl border border-gray-200/80 dark:border-slate-700/60">
+              <span className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider block">Catalog SKUs</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">{products.length}</span>
             </div>
-            <div className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-3 rounded-xl border border-slate-700/60">
-              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider block">Stock on Hand</span>
-              <span className="text-xl font-bold text-emerald-400 font-mono">{totalStockUnits.toLocaleString()}</span>
+            <div className="bg-slate-50 dark:bg-slate-800/80 px-4 py-3 rounded-xl border border-gray-200/80 dark:border-slate-700/60">
+              <span className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider block">Stock on Hand</span>
+              <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">{totalStockUnits.toLocaleString()}</span>
             </div>
-            <div className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-3 rounded-xl border border-slate-700/60">
-              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider block">Attention SKUs</span>
-              <span className={`text-xl font-bold font-mono ${lowStockCount + outOfStockCount > 0 ? 'text-amber-400' : 'text-slate-300'}`}>
+            <div className="bg-slate-50 dark:bg-slate-800/80 px-4 py-3 rounded-xl border border-gray-200/80 dark:border-slate-700/60">
+              <span className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider block">Attention SKUs</span>
+              <span className={`text-xl font-bold font-mono ${lowStockCount + outOfStockCount > 0 ? 'text-amber-500' : 'text-gray-400 dark:text-slate-300'}`}>
                 {lowStockCount + outOfStockCount}
               </span>
             </div>
