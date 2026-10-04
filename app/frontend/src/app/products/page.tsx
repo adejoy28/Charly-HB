@@ -1,15 +1,16 @@
-// products/page.tsx — Manage Products page
-// View all products with balances, add new products, edit existing products
+// products/page.tsx — Enterprise Product Catalog & Inventory Valuation
+// Features: Catalog KPI Stats, Real-Time Search, Fast Add/Edit Drawer, CSV Export & Stock Health Badges
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useStock } from '@/context/StockContext'
 import { createProduct, updateProduct, deleteProduct } from '@/lib/api'
 import { ApiErrorHandler } from '@/lib/errorHandler'
 import { formatNumber, formatCurrency } from '@/lib/helpers'
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton'
 import EmptyState from '@/components/ui/EmptyState'
+import { SearchIcon, DownloadIcon, PlusIcon, PackageIcon, AlertTriangleIcon } from '@/components/ui/Icons'
 import type { Product } from '@/types'
 
 interface FormData {
@@ -34,32 +35,62 @@ export default function ProductsPage() {
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
 
   // Filter products based on search term
-  const filteredProducts = products.filter(product => 
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.sku_code.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => 
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (product.sku_code && product.sku_code.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+  }, [products, searchTerm])
+
+  // Catalog calculations
+  const totalCatalogUnits = useMemo(() => {
+    return products.reduce((acc, p) => acc + (Number(p.balance) || 0), 0)
+  }, [products])
+
+  const totalCatalogCostValue = useMemo(() => {
+    return products.reduce((acc, p) => acc + ((Number(p.balance) || 0) * (Number(p.cost_price) || 0)), 0)
+  }, [products])
+
+  const lowStockProductsCount = useMemo(() => {
+    return products.filter(p => (Number(p.balance) || 0) <= 10).length
+  }, [products])
 
   const handleExport = () => {
-    const token = localStorage.getItem('charly_token')
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/export/products` 
+    if (filteredProducts.length === 0) return
 
-    fetch(url, { headers: { Authorization: `Bearer ${token}` } })
-      .then(res => res.blob())
-      .then(blob => {
-        const a = document.createElement('a')
-        a.href = URL.createObjectURL(blob)
-        a.download = `products-${new Date().toISOString().split('T')[0]}.csv` 
-        a.click()
-        URL.revokeObjectURL(a.href)
-      })
+    const headers = ['ID', 'Product Name', 'SKU Code', 'Cost Price', 'Current Balance', 'Total Valuation', 'Status']
+    const rows = filteredProducts.map(p => {
+      const bal = Number(p.balance) || 0
+      const cost = Number(p.cost_price) || 0
+      const val = bal * cost
+      const status = bal === 0 ? 'Out of Stock' : bal <= 10 ? 'Low Stock' : 'Optimal'
+      return [
+        p.id,
+        `"${p.name.replace(/"/g, '""')}"`,
+        p.sku_code || '',
+        cost.toFixed(2),
+        bal,
+        val.toFixed(2),
+        status
+      ]
+    })
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `charlyhb-products-${new Date().toISOString().split('T')[0]}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   useEffect(() => {
     if (editingProduct) {
       setFormData({
         name: editingProduct.name,
-        sku_code: editingProduct.sku_code,
-        cost_price: editingProduct.cost_price.toString()
+        sku_code: editingProduct.sku_code || '',
+        cost_price: editingProduct.cost_price ? editingProduct.cost_price.toString() : ''
       })
     }
   }, [editingProduct])
@@ -71,7 +102,8 @@ export default function ProductsPage() {
 
     try {
       const data = {
-        ...formData,
+        name: formData.name.trim(),
+        sku_code: formData.sku_code.trim(),
         cost_price: formData.cost_price ? parseFloat(formData.cost_price) : 0
       }
 
@@ -83,13 +115,13 @@ export default function ProductsPage() {
 
       await refreshProducts()
       resetForm()
-    } catch (error) {
-      const apiError = ApiErrorHandler.handleError(error)
+    } catch (err) {
+      const apiError = ApiErrorHandler.handleError(err)
       
       if (ApiErrorHandler.isValidationError(apiError)) {
         setError(apiError.message)
       } else {
-        setError('Failed to save product. Please try again.')
+        setError('Failed to save product. Please check input values.')
       }
     } finally {
       setFormLoading(false)
@@ -99,6 +131,7 @@ export default function ProductsPage() {
   const handleEdit = (product: Product) => {
     setEditingProduct(product)
     setShowAddForm(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleDelete = async (product: Product) => {
@@ -108,11 +141,11 @@ export default function ProductsPage() {
       await deleteProduct(product.id)
       await refreshProducts()
       setConfirmDelete(null)
-    } catch (error) {
-      const apiError = ApiErrorHandler.handleError(error)
+    } catch (err) {
+      const apiError = ApiErrorHandler.handleError(err)
       
       if (ApiErrorHandler.isConflictError(apiError)) {
-        setDeleteError('Cannot delete product with existing movements. Archive it instead.')
+        setDeleteError('Cannot delete product with existing movement records in ledger.')
       } else {
         setDeleteError('Failed to delete product. Please try again.')
       }
@@ -132,273 +165,344 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="space-y-4 lg:space-y-6">
-      {/* Page Header */}
-      <div className="flex justify-between items-center gap-3 flex-wrap">
+    <div className="space-y-6 pb-12 animate-in fade-in duration-300">
+      
+      {/* ── Page Header & Catalog Metrics ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">Products</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage your product catalog and inventory</p>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Product Master Catalog
+            </h1>
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold border border-orange-500/20">
+              {products.length} SKUs
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+            Maintain item specifications, unit cost prices, and active on-hand inventory levels.
+          </p>
         </div>
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="h-12 px-5 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70"
-        >
-          Add Product
-        </button>
+
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={handleExport}
+            disabled={filteredProducts.length === 0}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 border border-gray-200 dark:border-slate-700 transition-colors disabled:opacity-50"
+          >
+            <DownloadIcon size={14} />
+            <span>Export CSV</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              if (showAddForm && !editingProduct) {
+                resetForm()
+              } else {
+                resetForm()
+                setShowAddForm(true)
+              }
+            }}
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-xl shadow-sm shadow-orange-500/20 transition-all active:scale-95"
+          >
+            <PlusIcon size={15} />
+            <span>{showAddForm && !editingProduct ? 'Close Form' : 'New Product'}</span>
+          </button>
+        </div>
       </div>
 
-      {/* Search */}
-      <div className="bg-white border border-gray-200 rounded-xl p-4">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search products by name or SKU code..."
-          className="w-full h-12 px-4 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:border-orange-500"
-        />
+      {/* ── Summary Statistics Cards ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+            <PackageIcon size={18} />
+          </div>
+          <div>
+            <span className="text-[11px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
+              Units on Hand
+            </span>
+            <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">
+              {totalCatalogUnits.toLocaleString()}
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <span className="text-sm font-bold">₦</span>
+          </div>
+          <div>
+            <span className="text-[11px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
+              Estimated Inventory Value
+            </span>
+            <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+              {formatCurrency(totalCatalogCostValue)}
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <AlertTriangleIcon size={18} />
+          </div>
+          <div>
+            <span className="text-[11px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider block">
+              Low / Depleted Stock
+            </span>
+            <span className={`text-xl font-bold font-mono ${lowStockProductsCount > 0 ? 'text-amber-500' : 'text-slate-400'}`}>
+              {lowStockProductsCount} items
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Add/Edit Form */}
+      {/* ── Product Create / Edit Card Drawer ── */}
       {(showAddForm || editingProduct) && (
-        <div className="bg-white border border-gray-200 rounded-xl p-4 lg:p-6">
-          <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-4">
-            {editingProduct ? 'Edit Product' : 'Add New Product'}
-          </h3>
+        <div className="bg-white dark:bg-slate-900 border border-orange-500/30 dark:border-orange-500/20 rounded-2xl p-5 sm:p-6 shadow-md transition-all animate-in fade-in">
+          <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-100 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+                {editingProduct ? `Edit Product: ${editingProduct.name}` : 'Register New Catalog SKU'}
+              </h3>
+            </div>
+            <button
+              onClick={resetForm}
+              className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+            >
+              Cancel
+            </button>
+          </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-500">
+            <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">
+                <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                   Product Name *
                 </label>
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full h-12 px-4 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500"
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="e.g. Golden Penny Spaghetti 500g"
+                  className="w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">
-                  SKU Code *
+                <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                  SKU / Barcode Code *
                 </label>
                 <input
                   type="text"
                   value={formData.sku_code}
-                  onChange={(e) => setFormData({...formData, sku_code: e.target.value})}
-                  className="w-full h-12 px-4 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500"
+                  onChange={(e) => setFormData({ ...formData, sku_code: e.target.value })}
+                  placeholder="e.g. GPS-500G"
+                  className="w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors uppercase font-mono"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">
-                  Cost Price
+                <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                  Unit Cost Price (₦)
                 </label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={formData.cost_price}
-                  onChange={(e) => setFormData({...formData, cost_price: e.target.value})}
-                  className="w-full h-12 px-4 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500"
+                  onChange={(e) => setFormData({ ...formData, cost_price: e.target.value })}
                   placeholder="0.00"
+                  className="w-full h-11 px-4 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors font-mono"
                 />
               </div>
             </div>
 
-            <div className="mt-6 flex flex-col gap-3 md:flex-row md:justify-end">
+            <div className="mt-5 flex items-center justify-end gap-2.5">
               <button
                 type="button"
-                onClick={handleExport}
-                className="flex items-center justify-center gap-1.5 h-12 px-4 text-sm font-medium border border-gray-200 text-gray-600 rounded-xl active:opacity-70"
+                onClick={resetForm}
+                className="px-4 py-2 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003 3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Export
+                Cancel
               </button>
               <button
                 type="submit"
                 disabled={formLoading}
-                className="w-full md:w-auto h-12 px-6 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70 disabled:opacity-40"
+                className="px-5 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95 disabled:opacity-50"
               >
-                {formLoading ? 'Saving...' : (editingProduct ? 'Update' : 'Create')}
-              </button>
-              <button
-                type="button"
-                onClick={resetForm}
-                className="w-full md:w-auto h-12 px-6 bg-white border border-gray-200 text-gray-600 text-sm font-medium rounded-xl active:opacity-70"
-              >
-                Cancel
+                {formLoading ? 'Saving...' : editingProduct ? 'Update Product' : 'Save New Product'}
               </button>
             </div>
           </form>
         </div>
       )}
 
-      {/* Products Table */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-4 lg:px-6 py-4 border-b border-gray-200">
-          <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            Products ({filteredProducts.length})
-          </h3>
+      {/* ── Main Catalog Table Panel ── */}
+      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+        
+        {/* Search Bar Toolbar */}
+        <div className="p-4 sm:p-5 border-b border-gray-100 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="relative flex-1 max-w-md">
+            <SearchIcon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search products by SKU code or title..."
+              className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors"
+            />
+          </div>
+
+          <div className="text-xs text-gray-500 dark:text-slate-400 font-medium">
+            Showing <strong>{filteredProducts.length}</strong> of <strong>{products.length}</strong> items
+          </div>
         </div>
 
-        {productsLoading ? (
-          <LoadingSkeleton type="table" rows={5} />
-        ) : filteredProducts.length === 0 ? (
-          <EmptyState
-            icon="📦"
-            title={searchTerm ? 'No products found' : 'No products yet'}
-            description={searchTerm ? 'Try adjusting your search terms' : 'Add your first product to get started'}
-            action={!searchTerm ? {
-              label: 'Add Your First Product',
-              onClick: () => setShowAddForm(true)
-            } : undefined}
-          />
-        ) : (
-          <>
-            {/* Mobile product cards */}
-            <div className="md:hidden space-y-2">
-              {filteredProducts.map((product) => (
-                <div key={product.id} className="bg-white border border-gray-200 rounded-xl p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">{product.name}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{product.sku_code}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {product.cost_price > 0 ? formatCurrency(product.cost_price) + ' / carton' : 'No price set'}
-                      </p>
-                    </div>
-                    <div className={`text-xl font-bold ml-3 shrink-0 ${
-                      product.balance === 0 ? 'text-red-500' :
-                      product.balance <= 5 ? 'text-orange-500' : 'text-green-600'
-                    }`}>
-                      {formatNumber(product.balance)}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-                    <span className="text-xs text-gray-400">
-                      {product.cost_price > 0 ? formatCurrency(product.cost_price) : 'No price set'}
-                    </span>
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => handleEdit(product)}
-                        className="text-sm text-orange-500 font-medium active:opacity-70"
-                      >
-                        Edit
-                      </button>
-                      {confirmDelete === product.id ? (
-                        <span className="flex gap-2">
-                          <button onClick={() => handleDelete(product)} className="text-sm text-red-500 active:opacity-70">Confirm</button>
-                          <button onClick={() => setConfirmDelete(null)} className="text-sm text-gray-400 active:opacity-70">Cancel</button>
-                        </span>
-                      ) : (
-                        <button onClick={() => setConfirmDelete(product.id)} className="text-sm text-red-500 active:opacity-70">Delete</button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {deleteError && (
+          <div className="m-4 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400">
+            {deleteError}
+          </div>
+        )}
 
-            {/* Desktop table — hidden on mobile */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      Product
-                    </th>
-                    <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      SKU Code
-                    </th>
-                    <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      Cost Price
-                    </th>
-                    <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      Balance
-                    </th>
-                    <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-100">
-                  {filteredProducts.map((product) => (
-                    <tr key={product.id} className="hover:bg-gray-50">
-                      <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
+        {productsLoading ? (
+          <div className="p-6">
+            <LoadingSkeleton type="table" rows={6} />
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="p-8">
+            <EmptyState
+              icon="📦"
+              title={searchTerm ? 'No matching products found' : 'Product catalog is empty'}
+              description={searchTerm ? 'Try changing your search terms.' : 'Create your first product to begin tracking warehouse stock.'}
+              action={!searchTerm ? {
+                label: 'Create First Product',
+                onClick: () => setShowAddForm(true)
+              } : undefined}
+            />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-gray-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="py-3 px-4 sm:px-6">Product Description</th>
+                  <th className="py-3 px-4">SKU Code</th>
+                  <th className="py-3 px-4 text-right">Cost Price</th>
+                  <th className="py-3 px-4 text-right">Stock on Hand</th>
+                  <th className="py-3 px-4 text-center">Status</th>
+                  <th className="py-3 px-4 sm:px-6 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800/80 text-xs">
+                {filteredProducts.map((product) => {
+                  const balance = Number(product.balance) || 0
+                  const isDepleted = balance === 0
+                  const isLow = balance > 0 && balance <= 10
+
+                  return (
+                    <tr 
+                      key={product.id} 
+                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
+                    >
+                      {/* Product Name */}
+                      <td className="py-3.5 px-4 sm:px-6 font-semibold text-gray-900 dark:text-white">
+                        <div className="truncate max-w-[260px]">{product.name}</div>
                       </td>
-                      <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">{product.sku_code}</div>
+
+                      {/* SKU Code */}
+                      <td className="py-3.5 px-4">
+                        <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                          {product.sku_code}
+                        </span>
                       </td>
-                      <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {product.cost_price > 0 ? formatCurrency(product.cost_price) : (
-                            <span className="text-gray-400">—</span>
+
+                      {/* Cost Price */}
+                      <td className="py-3.5 px-4 text-right font-mono font-medium text-gray-800 dark:text-slate-200">
+                        {product.cost_price > 0 ? formatCurrency(product.cost_price) : <span className="text-gray-400">—</span>}
+                      </td>
+
+                      {/* Balance */}
+                      <td className="py-3.5 px-4 text-right font-mono font-bold text-sm">
+                        <span className={
+                          isDepleted ? 'text-rose-500' :
+                          isLow ? 'text-amber-500' : 'text-emerald-600 dark:text-emerald-400'
+                        }>
+                          {formatNumber(balance)} units
+                        </span>
+                      </td>
+
+                      {/* Status */}
+                      <td className="py-3.5 px-4 text-center">
+                        {isDepleted && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                            Out of Stock
+                          </span>
+                        )}
+                        {isLow && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                            Low Stock
+                          </span>
+                        )}
+                        {!isDepleted && !isLow && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                            Optimal
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Action buttons */}
+                      <td className="py-3.5 px-4 sm:px-6 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => handleEdit(product)}
+                            className="px-2.5 py-1 text-xs font-semibold text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/30 rounded-lg transition-colors"
+                          >
+                            Edit
+                          </button>
+                          
+                          {confirmDelete === product.id ? (
+                            <div className="inline-flex items-center gap-1.5 bg-rose-50 dark:bg-rose-950/50 p-1 rounded-lg border border-rose-200 dark:border-rose-900">
+                              <button
+                                onClick={() => handleDelete(product)}
+                                className="px-2 py-0.5 text-[11px] font-bold bg-rose-600 text-white rounded transition-colors"
+                              >
+                                Delete
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(null)}
+                                className="px-2 py-0.5 text-[11px] font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setConfirmDelete(product.id)}
+                              className="px-2.5 py-1 text-xs font-semibold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors"
+                            >
+                              Delete
+                            </button>
                           )}
                         </div>
                       </td>
-                      <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                        <div className={`text-sm font-medium ${
-                          product.balance === 0 ? 'text-red-500' :
-                          product.balance <= 5 ? 'text-orange-500' : 'text-green-600'
-                        }`}>
-                          {formatNumber(product.balance)} units
-                        </div>
-                      </td>
-                      <td className="px-4 lg:px-6 py-3 whitespace-nowrap text-sm">
-                        <button
-                          onClick={() => handleEdit(product)}
-                          className="text-orange-500 font-medium active:opacity-70 mr-3"
-                        >
-                          Edit
-                        </button>
-                        {confirmDelete === product.id ? (
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleDelete(product)}
-                              className="text-sm text-red-500 active:opacity-70"
-                            >
-                              Yes, delete
-                            </button>
-                            <button
-                              onClick={() => setConfirmDelete(null)}
-                              className="text-sm text-gray-600 active:opacity-70"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => setConfirmDelete(product.id)}
-                            className="text-red-500 text-sm active:opacity-70 ml-3"
-                          >
-                            Delete
-                          </button>
-                        )}
-                        {deleteError && confirmDelete === product.id && (
-                          <p className="text-xs text-red-500 mt-1">{deleteError}</p>
-                        )}
-                      </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
+
       </div>
+
     </div>
   )
 }

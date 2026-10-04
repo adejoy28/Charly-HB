@@ -1,15 +1,16 @@
-// movements/page.tsx — Full log of every movement, filterable
-// Type, product, shop, and date range filters with detailed movement table
+// movements/page.tsx — Enterprise Stock Movements Audit Ledger
+// Features: Advanced Multi-Parameter Filters, Dense Audit Table, Real-Time Badges & Direct CSV Export
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useStock } from '@/context/StockContext'
 import { getMovements } from '@/lib/api'
 import { formatDate, formatTime, formatNumber, formatCurrency, extractArray } from '@/lib/helpers'
 import TypeBadge from '@/components/ui/TypeBadge'
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton'
 import EmptyState from '@/components/ui/EmptyState'
+import { FilterIcon, DownloadIcon, SearchIcon, RefreshCwIcon } from '@/components/ui/Icons'
 import type { Product, Shop, Movement } from '@/types'
 
 interface Filters {
@@ -21,12 +22,13 @@ interface Filters {
 }
 
 export default function MovementsPage() {
-  const { products, shops, refreshMovements } = useStock()
+  const { products, shops } = useStock()
   const [movements, setMovements] = useState<Movement[]>([])
   const [loading, setLoading] = useState(true)
   const [hasMore, setHasMore] = useState(false)
   const [page, setPage] = useState(1)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [filters, setFilters] = useState<Filters>({
     type: 'all',
     product_id: '',
@@ -40,7 +42,6 @@ export default function MovementsPage() {
     try {
       const params: Record<string, string> = {}
       
-      // Add filters that have values
       if (filters.type && filters.type !== 'all') {
         params.type = filters.type
       }
@@ -58,7 +59,7 @@ export default function MovementsPage() {
       }
 
       params.page = pageNum.toString()
-      params.limit = '50'
+      params.limit = '100'
 
       const response = await getMovements(params)
       const data = response.data
@@ -92,34 +93,45 @@ export default function MovementsPage() {
   }
 
   const handleExport = () => {
-    const token = localStorage.getItem('charly_token')
-    const params = new URLSearchParams()
-    if (filters.type && filters.type !== 'all') params.append('type', filters.type)
-    if (filters.from) params.append('from', filters.from)
-    if (filters.to)   params.append('to',   filters.to)
+    if (filteredMovements.length === 0) return
 
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/export/movements?${params.toString()}` 
+    const headers = ['ID', 'Recorded At', 'User', 'Product', 'SKU', 'Type', 'Quantity', 'Valuation', 'Shop / Note', 'Status']
+    const rows = filteredMovements.map(m => {
+      const val = m.type === 'distribution' && m.selling_price != null ? (m.selling_price * Math.abs(m.qty)).toFixed(2) : ''
+      return [
+        m.id,
+        m.recorded_at,
+        m.recorded_by || '',
+        `"${(m.product?.name || '').replace(/"/g, '""')}"`,
+        m.product?.sku_code || '',
+        m.type,
+        m.qty,
+        val,
+        `"${(m.shop?.name || m.note || '').replace(/"/g, '""')}"`,
+        m.status
+      ]
+    })
 
-    // Fetch with auth header then trigger download
-    fetch(url, { headers: { Authorization: `Bearer ${token}` } })
-      .then(res => res.blob())
-      .then(blob => {
-        const a = document.createElement('a')
-        a.href = URL.createObjectURL(blob)
-        a.download = `movements-${new Date().toISOString().split('T')[0]}.csv` 
-        a.click()
-        URL.revokeObjectURL(a.href)
-      })
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `charlyhb-movements-${new Date().toISOString().split('T')[0]}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
-  // Count active filters for the badge
-  const activeFilterCount = [
-    filters.type !== 'all' ? 1 : 0,
-    filters.product_id ? 1 : 0,
-    filters.shop_id ? 1 : 0,
-    filters.from ? 1 : 0,
-    filters.to ? 1 : 0,
-  ].reduce((a, b) => a + b, 0)
+  // Count active filters
+  const activeFilterCount = useMemo(() => {
+    return [
+      filters.type !== 'all' ? 1 : 0,
+      filters.product_id ? 1 : 0,
+      filters.shop_id ? 1 : 0,
+      filters.from ? 1 : 0,
+      filters.to ? 1 : 0,
+    ].reduce((a, b) => a + b, 0)
+  }, [filters])
 
   const clearFilters = () => setFilters({
     type: 'all',
@@ -129,56 +141,70 @@ export default function MovementsPage() {
     to: ''
   })
 
-  // Get cost price for a product by id
-  const getProductPrice = (productId: number): number => {
-    const product = products.find(p => p.id === productId)
-    return product?.cost_price || 0
-  }
+  // Filter in memory for instantaneous search query
+  const filteredMovements = useMemo(() => {
+    if (!searchQuery.trim()) return movements
+
+    const q = searchQuery.toLowerCase()
+    return movements.filter(m => 
+      (m.product?.name && m.product.name.toLowerCase().includes(q)) ||
+      (m.product?.sku_code && m.product.sku_code.toLowerCase().includes(q)) ||
+      (m.shop?.name && m.shop.name.toLowerCase().includes(q)) ||
+      (m.recorded_by && m.recorded_by.toLowerCase().includes(q)) ||
+      (m.note && m.note.toLowerCase().includes(q))
+    )
+  }, [movements, searchQuery])
 
   return (
-    <div className="space-y-4 lg:space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">Movements</h1>
-        <p className="text-sm text-gray-500 mt-1">Complete log of all stock movements</p>
-      </div>
+    <div className="space-y-6 pb-12 animate-in fade-in duration-300">
+      
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Stock Movement Ledger
+            </h1>
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold border border-slate-200 dark:border-slate-700 font-mono">
+              {filteredMovements.length} records
+            </span>
+          </div>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+            Immutable transaction log of opening balances, receipts, shop dispatches, and spoil loss.
+          </p>
+        </div>
 
-      {/* Filter toggle button */}
-      <div className="flex items-center justify-between mb-1">
-        <p className="text-sm text-gray-500">{movements.length} movement{movements.length !== 1 ? 's' : ''}</p>
-        <div className="flex items-center gap-2">
-          {activeFilterCount > 0 && (
-            <button
-              onClick={clearFilters}
-              className="text-xs text-orange-500 active:opacity-70"
-            >
-              Clear
-            </button>
-          )}
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => fetchMovements(1)}
+            disabled={loading}
+            title="Refresh movements"
+            className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border border-gray-200 dark:border-slate-700"
+          >
+            <RefreshCwIcon size={15} className={loading ? 'animate-spin text-orange-500' : ''} />
+          </button>
+
           <button
             onClick={handleExport}
-            className="flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl border border-gray-200 text-gray-600 bg-white active:opacity-70"
-            title="Export to CSV"
+            disabled={filteredMovements.length === 0}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 border border-gray-200 dark:border-slate-700 transition-colors disabled:opacity-50"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003 3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Export
+            <DownloadIcon size={14} />
+            <span>Export CSV</span>
           </button>
+
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className={`flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl border active:opacity-70 ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border transition-all ${
               activeFilterCount > 0
-                ? 'border-orange-500 text-orange-500 bg-orange-50'
-                : 'border-gray-200 text-gray-600 bg-white'
+                ? 'border-orange-500 bg-orange-500/10 text-orange-600 dark:text-orange-400'
+                : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
-            </svg>
-            Filters
+            <FilterIcon size={14} />
+            <span>Filter Parameters</span>
             {activeFilterCount > 0 && (
-              <span className="bg-orange-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="w-4 h-4 rounded-full bg-orange-500 text-white text-[10px] font-bold flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -186,291 +212,253 @@ export default function MovementsPage() {
         </div>
       </div>
 
-      {/* Collapsible filter panel */}
+      {/* ── Search & Filter Drawer ── */}
       {filtersOpen && (
-        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-1 md:grid md:grid-cols-2 md:gap-3 md:space-y-0 space-y-3">
-          {/* Type */}
-          <div>
-            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Type</label>
-            <select
-              value={filters.type}
-              onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
-            >
-              <option value="all">All Types</option>
-              <option value="opening">Opening</option>
-              <option value="receipt">Receipt</option>
-              <option value="distribution">Distribution</option>
-              <option value="correction">Correction</option>
-              <option value="spoil">Spoil</option>
-            </select>
+        <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4 animate-in fade-in">
+          <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-slate-800">
+            <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+              Filter Transaction Records
+            </h3>
+            {activeFilterCount > 0 && (
+              <button
+                onClick={clearFilters}
+                className="text-xs text-orange-500 hover:underline font-semibold"
+              >
+                Reset All Filters
+              </button>
+            )}
           </div>
 
-          {/* Product */}
-          <div>
-            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Product</label>
-            <select
-              value={filters.product_id}
-              onChange={(e) => handleFilterChange('product_id', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
-            >
-              <option value="">All Products</option>
-              {Array.isArray(products) ? products.map((product: Product) => (
-                <option key={product.id} value={product.id}>
-                  {product.name}
-                </option>
-              )) : (
-                <option value="">Loading products...</option>
-              )}
-            </select>
-          </div>
-
-          {/* Shop */}
-          <div>
-            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Shop</label>
-            <select
-              value={filters.shop_id}
-              onChange={(e) => handleFilterChange('shop_id', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
-            >
-              <option value="">All Shops</option>
-              {shops.filter(shop => !shop.archived).map(shop => (
-                <option key={shop.id} value={shop.id}>{shop.name}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Date range — side by side */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            {/* Type */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">From</label>
-              <input
-                type="date"
-                value={filters.from}
-                onChange={(e) => handleFilterChange('from', e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
-              />
+              <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                Movement Type
+              </label>
+              <select
+                value={filters.type}
+                onChange={(e) => handleFilterChange('type', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+              >
+                <option value="all">All Movement Types</option>
+                <option value="opening">Opening Stock</option>
+                <option value="receipt">Inbound Receipt</option>
+                <option value="distribution">Distribution to Shop</option>
+                <option value="correction">Inventory Correction</option>
+                <option value="spoil">Spoil / Damaged Loss</option>
+              </select>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">To</label>
-              <input
-                type="date"
-                value={filters.to}
-                onChange={(e) => handleFilterChange('to', e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 bg-white rounded-xl text-sm text-gray-900 focus:outline-none focus:border-orange-500"
-              />
-            </div>
-          </div>
 
-          {/* Apply button — full width on mobile, spans both cols on desktop */}
-          <div className="md:col-span-2">
-            <button
-              onClick={() => setFiltersOpen(false)}
-              className="w-full h-12 bg-orange-500 text-white text-sm font-semibold rounded-xl active:opacity-70"
-            >
-              Apply Filters
-            </button>
+            {/* Product */}
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                Filter by Product
+              </label>
+              <select
+                value={filters.product_id}
+                onChange={(e) => handleFilterChange('product_id', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+              >
+                <option value="">All Catalog Products</option>
+                {products.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.sku_code})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Shop */}
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                Filter by Shop / Branch
+              </label>
+              <select
+                value={filters.shop_id}
+                onChange={(e) => handleFilterChange('shop_id', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+              >
+                <option value="">All Destination Shops</option>
+                {shops.filter(s => !s.archived).map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Date range */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  value={filters.from}
+                  onChange={(e) => handleFilterChange('from', e.target.value)}
+                  className="w-full px-2.5 py-1.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  value={filters.to}
+                  onChange={(e) => handleFilterChange('to', e.target.value)}
+                  className="w-full px-2.5 py-1.5 border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:border-orange-500"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Movements Table */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-4 lg:px-6 py-4 border-b border-gray-200">
-          <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            Movements ({movements.length})
-          </h3>
+      {/* ── Movements Table & Search Toolbar ── */}
+      <div className="bg-white dark:bg-slate-900 border border-gray-200/80 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+        
+        {/* Search Header */}
+        <div className="p-4 sm:p-5 border-b border-gray-100 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="relative flex-1 max-w-md">
+            <SearchIcon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by product, shop, operator or note..."
+              className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors"
+            />
+          </div>
+
+          <div className="text-xs text-gray-500 dark:text-slate-400 font-medium">
+            Showing <strong>{filteredMovements.length}</strong> movements
+          </div>
         </div>
 
         {loading ? (
-          <LoadingSkeleton type="table" rows={10} />
-        ) : movements.length === 0 ? (
-          <EmptyState
-            icon="📋"
-            title="No movements yet"
-            description={
-              Object.values(filters).some(v => v) ? 
-                'Try adjusting your filters' : 
-                'No movements have been recorded yet'
-            }
-          />
+          <div className="p-6">
+            <LoadingSkeleton type="table" rows={8} />
+          </div>
+        ) : filteredMovements.length === 0 ? (
+          <div className="p-8">
+            <EmptyState
+              icon="📋"
+              title="No Movement Records Found"
+              description="No ledger entries match the selected filters or search terms."
+              action={activeFilterCount > 0 ? {
+                label: 'Clear Filters',
+                onClick: clearFilters
+              } : undefined}
+            />
+          </div>
         ) : (
-          <>
-          <div className="hidden md:block overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Date
-                  </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Time
-                  </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Recorded by
-                  </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Product
-                  </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Type
-                  </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Quantity
-                  </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Value
-                  </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Shop / Note
-                  </th>
-                  <th className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Status
-                  </th>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-gray-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                  <th className="py-3 px-4 sm:px-6">Timestamp</th>
+                  <th className="py-3 px-4">Operator</th>
+                  <th className="py-3 px-4">Product & SKU</th>
+                  <th className="py-3 px-4">Type</th>
+                  <th className="py-3 px-4 text-right">Quantity</th>
+                  <th className="py-3 px-4 text-right">Valuation</th>
+                  <th className="py-3 px-4">Shop / Details</th>
+                  <th className="py-3 px-4 sm:px-6 text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
-                {movements.map((movement) => (
-                  <tr key={movement.id}>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {formatDate(movement.recorded_at)}
-                      </div>
-                    </td>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {formatTime(movement.recorded_at)}
-                      </div>
-                    </td>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      <span className="text-xs text-gray-500">{movement.recorded_by || '—'}</span>
-                    </td>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {movement.product?.name || 'Unknown'}
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800/80 text-xs">
+                {filteredMovements.map((m) => {
+                  const isPositive = m.qty > 0
+                  return (
+                    <tr 
+                      key={m.id} 
+                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
+                    >
+                      {/* Timestamp */}
+                      <td className="py-3.5 px-4 sm:px-6 whitespace-nowrap">
+                        <div className="font-semibold text-gray-900 dark:text-slate-200">
+                          {formatDate(m.recorded_at)}
                         </div>
-                        <div className="text-xs text-gray-500">
-                          {movement.product?.sku_code || ''}
+                        <div className="text-[10px] text-gray-400 dark:text-slate-500 font-mono">
+                          {formatTime(m.recorded_at)}
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      <TypeBadge type={movement.type} />
-                    </td>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      <div className={`text-sm font-medium ${
-                        movement.qty > 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {movement.qty > 0 ? '+' : ''}{formatNumber(movement.qty)}
-                      </div>
-                    </td>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      {movement.type === 'distribution' && movement.selling_price != null ? (
-                        <div>
-                          <div className="text-sm text-gray-700">
-                            {formatCurrency(movement.selling_price * Math.abs(movement.qty))}
-                          </div>
-                          {movement.unit_cost != null && movement.unit_cost !== movement.selling_price && (
-                            <div className="text-xs text-gray-400">
-                              cost: {formatCurrency(movement.unit_cost * Math.abs(movement.qty))}
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="text-sm text-gray-300">—</div>
-                      )}
-                    </td>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {movement.shop?.name || movement.note || '-'}
-                        {movement.type === 'correction' && movement.note && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            {movement.note}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-4 lg:px-6 py-3 whitespace-nowrap">
-                      {movement.status && (
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                          movement.status === 'pending' ? 'bg-yellow-50 text-yellow-700' :
-                          movement.status === 'rejected' ? 'bg-red-50 text-red-500' :
-                          movement.status === 'confirmed' ? 'bg-green-50 text-green-600' :
-                          'bg-gray-100 text-gray-600'
-                        }`}>
-                          {movement.status}
+                      </td>
+
+                      {/* Operator */}
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span className="text-xs text-gray-700 dark:text-slate-300">
+                          {m.recorded_by || 'System'}
                         </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+
+                      {/* Product */}
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <div className="font-semibold text-gray-900 dark:text-slate-100 truncate max-w-[200px]">
+                          {m.product?.name || 'Unknown'}
+                        </div>
+                        <div className="font-mono text-[10px] text-gray-400 dark:text-slate-500">
+                          {m.product?.sku_code || '—'}
+                        </div>
+                      </td>
+
+                      {/* Type Badge */}
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <TypeBadge type={m.type} />
+                      </td>
+
+                      {/* Quantity */}
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-mono font-bold text-sm">
+                        <span className={isPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>
+                          {isPositive ? '+' : ''}{formatNumber(m.qty)}
+                        </span>
+                      </td>
+
+                      {/* Valuation */}
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-mono text-xs">
+                        {m.type === 'distribution' && m.selling_price != null ? (
+                          <div className="text-gray-900 dark:text-slate-200 font-medium">
+                            {formatCurrency(m.selling_price * Math.abs(m.qty))}
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 dark:text-slate-600">—</span>
+                        )}
+                      </td>
+
+                      {/* Destination / Note */}
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <div className="text-gray-800 dark:text-slate-300 font-medium truncate max-w-[180px]">
+                          {m.shop?.name || m.note || '—'}
+                        </div>
+                      </td>
+
+                      {/* Status */}
+                      <td className="py-3.5 px-4 sm:px-6 text-center whitespace-nowrap">
+                        {m.status === 'confirmed' && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                            Confirmed
+                          </span>
+                        )}
+                        {m.status === 'pending' && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                            Pending Review
+                          </span>
+                        )}
+                        {m.status === 'rejected' && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                            Rejected
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
-
-          {/* Mobile cards — visible only on mobile */}
-          <div className="md:hidden space-y-2">
-            {movements.map((movement) => (
-              <div key={movement.id} className="bg-white border border-gray-100 rounded-xl px-4 py-3">
-                <div className="flex items-center justify-between mb-1">
-                  <TypeBadge type={movement.type} />
-                  <span className={`text-sm font-bold ${movement.qty > 0 ? 'text-green-600' : 'text-red-500'}`}>
-                    {movement.qty > 0 ? '+' : ''}{formatNumber(movement.qty)} cartons
-                  </span>
-                </div>
-                <p className="text-sm font-medium text-gray-900">{movement.product?.name}</p>
-
-                {/* Price line — only for distributions with stored prices */}
-                {movement.type === 'distribution' && movement.selling_price != null && (
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    {formatCurrency(movement.selling_price)} × {Math.abs(movement.qty)} ={' '}
-                    <span className="font-medium text-gray-700">
-                      {formatCurrency(movement.selling_price * Math.abs(movement.qty))}
-                    </span>
-                    {/* Show cost vs selling margin if they differ */}
-                    {movement.unit_cost != null && movement.unit_cost !== movement.selling_price && (
-                      <span className="text-gray-400 ml-1">
-                        (cost {formatCurrency(movement.unit_cost)})
-                      </span>
-                    )}
-                  </p>
-                )}
-
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-xs text-gray-400">
-                    {formatDate(movement.recorded_at)} · {formatTime(movement.recorded_at)}
-                  </span>
-                  <span className="text-xs text-gray-400">{movement.shop?.name || ''}</span>
-                </div>
-                {movement.recorded_by && (
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    by {movement.recorded_by}
-                  </p>
-                )}
-                {movement.note && (
-                  <p className="text-xs text-gray-400 mt-1 italic">{movement.note}</p>
-                )}
-              </div>
-            ))}
-          </div>
-          </>
         )}
+
       </div>
 
-      {/* Load more button */}
-      {hasMore && (
-        <button
-          onClick={() => {
-            const next = page + 1
-            setPage(next)
-            fetchMovements(next)
-          }}
-          className="w-full h-12 border border-gray-200 text-sm text-gray-500 rounded-xl active:opacity-70 mt-2"
-        >
-          Load more
-        </button>
-      )}
     </div>
   )
 }
